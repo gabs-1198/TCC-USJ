@@ -16,7 +16,7 @@ label {
     margin-top: 10px;
 }
 
-input[type="text"] {
+select, input[type="text"] {
     width: 100%;
     padding: 8px;
     margin-top: 5px;

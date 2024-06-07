@@ -1,32 +1,38 @@
 from flask import Flask, render_template, request
-import sqlite3
+from flask_mysqldb import MySQL
+import MySQLdb.cursors
 
 app = Flask(__name__)
 
-def get_db_connection():
-    conn = sqlite3.connect('meu_banco_de_dados.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+# Configuração do MySQL
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'meu_banco_de_dados'
+
+mysql = MySQL(app)
 
 @app.route('/')
 def index():
-    conn = get_db_connection()
-    options1 = conn.execute("SELECT DISTINCT coluna1 FROM dados").fetchall()
-    options2 = conn.execute("SELECT DISTINCT coluna2 FROM dados").fetchall()
-    options3 = conn.execute("SELECT DISTINCT coluna3 FROM dados").fetchall()
-    conn.close()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT DISTINCT coluna1 FROM dados")
+    options1 = cursor.fetchall()
+    cursor.execute("SELECT DISTINCT coluna2 FROM dados")
+    options2 = cursor.fetchall()
+    cursor.execute("SELECT DISTINCT coluna3 FROM dados")
+    options3 = cursor.fetchall()
     return render_template('index.html', options1=options1, options2=options2, options3=options3)
 
-@app.route('/resultados', methods=['POST'])
+@app.route('/templates/resultados.html', methods=['POST'])
 def resultados():
     filtro1 = request.form.get('filtro1')
     filtro2 = request.form.get('filtro2')
     filtro3 = request.form.get('filtro3')
 
-    conn = get_db_connection()
-    query = "SELECT * FROM dados WHERE coluna1 = ? AND coluna2 = ? AND coluna3 = ?"
-    dados_filtrados = conn.execute(query, (filtro1, filtro2, filtro3)).fetchall()
-    conn.close()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM dados WHERE coluna1 = %s AND coluna2 = %s AND coluna3 = %s"
+    cursor.execute(query, (filtro1, filtro2, filtro3))
+    dados_filtrados = cursor.fetchall()
 
     return render_template('resultados.html', dados=dados_filtrados)
 
