@@ -29,10 +29,14 @@ def resultados():
     filtro2 = request.form.get('filtro2')
     filtro3 = request.form.get('filtro3')
 
+    print(f"Filtro 1: {filtro1}, Filtro 2: {filtro2}, Filtro 3: {filtro3}")  # Depuração dos filtros
+
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT * FROM dados WHERE coluna1 = %s AND coluna2 = %s AND coluna3 = %s"
     cursor.execute(query, (filtro1, filtro2, filtro3))
     dados_filtrados = cursor.fetchall()
+
+    print(f"Dados Filtrados: {dados_filtrados}")  # Depuração dos dados filtrados
 
     return render_template('resultados.html', dados=dados_filtrados)
 

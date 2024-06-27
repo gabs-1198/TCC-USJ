@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtrar Dados</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Filtro de Dados</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Filtrar Dados</h1>
-    <form action="/templates/resultados.html" method="post">
-        <label for="filtro1">Filtro 1:</label>
-        <select id="filtro1" name="filtro1">
-            <option value="">--Selecione--</option>
-            {% for option in options1 %}
+    <h1>Filtro de Dados</h1>
+    <form action="/templates/resultados.html" method="POST">
+        <div>
+            <label for="filtro1">Filtro 1:</label>
+            <select name="filtro1" id="filtro1">
+                {% for option in options1 %}
                 <option value="{{ option['coluna1'] }}">{{ option['coluna1'] }}</option>
-            {% endfor %}
-        </select><br><br>
-
-        <label for="filtro2">Filtro 2:</label>
-        <select id="filtro2" name="filtro2">
-            <option value="">--Selecione--</option>
-            {% for option in options2 %}
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="filtro2">Filtro 2:</label>
+            <select name="filtro2" id="filtro2">
+                {% for option in options2 %}
                 <option value="{{ option['coluna2'] }}">{{ option['coluna2'] }}</option>
-            {% endfor %}
-        </select><br><br>
-
-        <label for="filtro3">Filtro 3:</label>
-        <select id="filtro3" name="filtro3">
-            <option value="">--Selecione--</option>
-            {% for option in options3 %}
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="filtro3">Filtro 3:</label>
+            <select name="filtro3" id="filtro3">
+                {% for option in options3 %}
                 <option value="{{ option['coluna3'] }}">{{ option['coluna3'] }}</option>
-            {% endfor %}
-        </select><br><br>
-
+                {% endfor %}
+            </select>
+        </div>
         <input type="submit" value="Filtrar">
     </form>
 </body>

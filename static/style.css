@@ -5,10 +5,14 @@ body {
 
 h1 {
     color: #333;
+    text-align: center; /* Centraliza o título */
 }
 
 form {
     margin-bottom: 20px;
+    display: flex; /* Faz os elementos do formulário ficarem lado a lado */
+    justify-content: center; /* Centraliza o formulário na página */
+    gap: 10px; /* Adiciona espaçamento entre os elementos do formulário */
 }
 
 label {
@@ -17,14 +21,14 @@ label {
 }
 
 select, input[type="text"] {
-    width: 100%;
+    width: auto; /* Ajusta a largura dos selects */
     padding: 8px;
     margin-top: 5px;
 }
 
 input[type="submit"] {
-    margin-top: 20px;
-    padding: 10px 15px;
+    margin-top: 33px; /* Remove margem superior para alinhamento */
+    padding: 1px 1px;
 }
 
 table {
