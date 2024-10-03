@@ -1,0 +1,76 @@
+/* styles.css */
+body {
+    background-color: #000;
+    color: #fff; /* Texto branco por padrão */
+    transition: all 0.3s ease; /* Animação suave ao trocar cores */
+}
+
+.sidebar {
+    background-color: #1c1c1c;
+    color: white;
+    min-height: 100vh;
+    padding-top: 20px;
+}
+
+.sidebar h5 {
+    padding: 10px 15px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 10px;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.btn-change-bg {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+}
+
+.table-container {
+    margin-top: 20px;
+}
+
+.table-row {
+    background-color: #1c1c1c;
+    padding: 10px;
+    border: 1px solid #333;
+}
+
+.logo {
+    max-width: 120px;
+}
+
+.menu-container {
+    margin-bottom: 20px;
+}   
+.modal-content {
+    background-color: #fff; /* Fundo branco */
+    color: #000; /* Texto preto */
+}
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+}
+.modal-title {
+    color: #000; /* Texto preto */
+}
+.form-label {
+    color: #000; /* Texto preto */
+}
+.form-control {
+    color: #000; /* Texto preto */
+    background-color: #fff; /* Fundo branco */
+}   

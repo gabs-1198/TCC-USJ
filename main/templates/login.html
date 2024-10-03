@@ -32,14 +32,26 @@
         }
     </style>
 </head>
-<body>
-    
+<body> 
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-4">
             <div class="logo">
                 <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo">
             </div>
-
+            <div class="container mt-5">
+                <!-- Loop para exibir as mensagens flash -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div>
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
             <div class="card">
                 <div class="card-header text-center">
                     <h3>Login</h3>
@@ -48,12 +60,12 @@
                     <form method="POST" action="{{ url_for('login') }}">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Digite seu email">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu email">
                         </div>
                         
                         <div class="mb-3">
                             <label for="senha" class="form-label">Senha</label>
-                            <input type="password" class="form-control" id="senha" placeholder="Digite sua senha">
+                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
                         </div>
                         <!-- Ir p pag de perfil --> 
                         <button type="submit" class="btn btn-primary w-100">Entrar</button>

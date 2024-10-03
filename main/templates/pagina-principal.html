@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard - Principal</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img src="static\images\logo.jpg" alt="Logo" class="logo my-3">
+            </div>
+        </div>
+    
+        <div class="row menu-container auto-font">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-5" id="home-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="true">Página inicial</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-5" id="profile-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Perfil</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-5" id="contact-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Cadastro/Alteração</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row auto-font">
+            <div class="col-md-2 sidebar">
+                <h5>Informação 1</h5>
+                <h5>Informação 2</h5>
+                <h5>Informação 3</h5>
+                <h5>Informação 4</h5>
+                <h5>Informação 5</h5>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+
+                    <div class="col-md-6 auto-font">
+                        <div class="table-container">
+                            <h3>Carros Cadastrados</h3>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                                        Cadastrar Novo Carro
+                                    </button>
+                                </div>
+                            </div>
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Chassi</th>
+                                        <th>Modelo</th>
+                                        <th>Ano</th>
+                                        <th>Última Troca de Pneus</th>
+                                        <th>Última Troca de Óleo</th>
+                                        <th>Última Revisão</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for carro in carros %}
+                                        <tr>
+                                            <td>{{ carro.chassi }}</td>
+                                            <td>{{ carro.modelo }}</td>
+                                            <td>{{ carro.ano }}</td>
+                                            <td>{{ carro.ultima_troca_pneus }}</td>
+                                            <td>{{ carro.ultima_troca_oleo }}</td>
+                                            <td>{{ carro.ultima_revisao }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCarModal" data-chassi="{{ carro.chassi }}" data-modelo="{{ carro.modelo }}" data-ano="{{ carro.ano }}" data-ultima_troca_pneus="{{ carro.ultima_troca_pneus }}" data-ultima_troca_oleo="{{ carro.ultima_troca_oleo }}" data-ultima_revisao="{{ carro.ultima_revisao }}">
+                                                    Editar
+                                                </button>   
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">Nenhum carro cadastrado.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Carro -->
+   <div class="modal fade" id="editCarModal" tabindex="-1" aria-labelledby="editCarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCarModalLabel">Editar Carro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCarForm" action="{{ url_for('edit_car') }}" method="POST">
+                    <input type="hidden" id="editChassi" name="chassi">
+                    <div class="mb-3">
+                        <label for="modelo" class="form-label" color="black">Modelo</label>
+                        <input type="text" class="form-control" name="modelo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ano" class="form-label" color="black">Ano</label>
+                        <input type="text" class="form-control" name="ano" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ultima_troca_pneus" class="form-label" color="black">Última Troca de Pneus</label>
+                        <input type="date" class="form-control" name="ultima_troca_pneus" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ultima_troca_oleo" class="form-label" color="black">Última Troca de Óleo</label>
+                        <input type="date" class="form-control" name="ultima_troca_oleo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ultima_revisao" class="form-label" color="black">Última Revisão</label>
+                        <input type="date" class="form-control" name="ultima_revisao" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    <!-- Modal de Cadastro de Carro -->
+    <div class="modal fade" id="addCarModal" tabindex="-1" aria-labelledby="addCarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCarModalLabel">Cadastrar Novo Carro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ url_for('add_car') }}">
+                        <div class="mb-3">
+                            <label for="chassi" class="form-label" color="black">Chassi</label>
+                            <input type="text" class="form-control" name="chassi" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modelo" class="form-label" color="black">Modelo</label>
+                            <input type="text" class="form-control" name="modelo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ano" class="form-label" color="black">Ano</label>
+                            <input type="text" class="form-control" name="ano" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ultima_troca_pneus" class="form-label" color="black">Última Troca de Pneus</label>
+                            <input type="date" class="form-control" name="ultima_troca_pneus" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ultima_troca_oleo" class="form-label" color="black">Última Troca de Óleo</label>
+                            <input type="date" class="form-control" name="ultima_troca_oleo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ultima_revisao" class="form-label" color="black">Última Revisão</label>
+                            <input type="date" class="form-control" name="ultima_revisao" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
