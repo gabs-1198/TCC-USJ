@@ -156,27 +156,79 @@ def add_car():
 
 @app.route('/data')
 def get_data():
+    month = request.args.get('month', type=int)
+    year = request.args.get('year', type=int)
+    
     cursor = db.cursor(dictionary=True)
     query = """
-       SELECT 
+        SELECT 
             COUNT(ultima_troca_pneus) AS count, 
             'Pneus' AS type 
         FROM carros 
-        WHERE ultima_troca_pneus IS NOT NULL
+        WHERE MONTH(ultima_troca_pneus) = %s 
+        AND YEAR(ultima_troca_pneus) = %s
         UNION ALL
         SELECT 
             COUNT(ultima_troca_oleo) AS count, 
             'Óleo' AS type 
         FROM carros 
-        WHERE ultima_troca_oleo IS NOT NULL
+        WHERE MONTH(ultima_troca_oleo) = %s 
+        AND YEAR(ultima_troca_oleo) = %s
         UNION ALL
         SELECT 
             COUNT(ultima_revisao) AS count, 
             'Revisão' AS type 
         FROM carros 
-        WHERE ultima_revisao IS NOT NULL
+        WHERE MONTH(ultima_revisao) = %s 
+        AND YEAR(ultima_revisao) = %s
+    """
+    cursor.execute(query, (month, year, month, year, month, year))
+    data = cursor.fetchall()
+    return jsonify(data)
+
+@app.route('/available_dates')
+def get_available_dates():
+    cursor = db.cursor(dictionary=True)
+    query = """
+        SELECT DISTINCT YEAR(ultima_troca_pneus) AS year, MONTH(ultima_troca_pneus) AS month FROM carros WHERE ultima_troca_pneus IS NOT NULL
+        UNION
+        SELECT DISTINCT YEAR(ultima_troca_oleo) AS year, MONTH(ultima_troca_oleo) AS month FROM carros WHERE ultima_troca_oleo IS NOT NULL
+        UNION
+        SELECT DISTINCT YEAR(ultima_revisao) AS year, MONTH(ultima_revisao) AS month FROM carros WHERE ultima_revisao IS NOT NULL
+        ORDER BY year, month
     """
     cursor.execute(query)
+    data = cursor.fetchall()
+    return jsonify(data)
+
+@app.route('/available_years')
+def get_available_years():
+    cursor = db.cursor(dictionary=True)
+    query = """
+        SELECT DISTINCT YEAR(ultima_troca_pneus) AS year FROM carros WHERE ultima_troca_pneus IS NOT NULL
+        UNION
+        SELECT DISTINCT YEAR(ultima_troca_oleo) AS year FROM carros WHERE ultima_troca_oleo IS NOT NULL
+        UNION
+        SELECT DISTINCT YEAR(ultima_revisao) AS year FROM carros WHERE ultima_revisao IS NOT NULL
+        ORDER BY year
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    return jsonify(data)
+
+@app.route('/available_months')
+def get_available_months():
+    year = request.args.get('year', type=int)
+    cursor = db.cursor(dictionary=True)
+    query = """
+        SELECT DISTINCT MONTH(ultima_troca_pneus) AS month FROM carros WHERE YEAR(ultima_troca_pneus) = %s AND ultima_troca_pneus IS NOT NULL
+        UNION
+        SELECT DISTINCT MONTH(ultima_troca_oleo) AS month FROM carros WHERE YEAR(ultima_troca_oleo) = %s AND ultima_troca_oleo IS NOT NULL
+        UNION
+        SELECT DISTINCT MONTH(ultima_revisao) AS month FROM carros WHERE YEAR(ultima_revisao) = %s AND ultima_revisao IS NOT NULL
+        ORDER BY month
+    """
+    cursor.execute(query, (year, year, year))
     data = cursor.fetchall()
     return jsonify(data)
 

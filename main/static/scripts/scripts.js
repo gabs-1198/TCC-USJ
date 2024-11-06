@@ -15,11 +15,67 @@ function adjustFontColor(element) {
     }
 }
 
+let myChart = null;
+
 window.onload = function() {
     const elements = document.querySelectorAll('.auto-font');
-    elements.forEach(adjustFontColor);  
-    
-     fetch('/data')
+    elements.forEach(adjustFontColor);
+
+    fetch('/available_years')
+        .then(response => response.json())
+        .then(data => {
+            const yearSelect = document.getElementById('year');
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.year;
+                option.textContent = item.year;
+                yearSelect.appendChild(option);
+            });
+
+            // Inicializa o gráfico com o primeiro ano disponível
+            if (data.length > 0) {
+                updateMonths(data[0].year);
+                updateChart(data[0].year, 1); // Inicializa com o primeiro mês do primeiro ano disponível
+            }
+        })
+        .catch(error => console.error('Erro ao buscar anos disponíveis:', error));
+
+    document.getElementById('year').addEventListener('change', function() {
+        const year = this.value;
+        updateMonths(year);
+    });
+
+    document.getElementById('updateChart').addEventListener('click', function() {
+        const month = document.getElementById('month').value;
+        const year = document.getElementById('year').value;
+        updateChart(year, month);
+    });
+};
+
+function updateMonths(year) {
+    fetch(`/available_months?year=${year}`)
+        .then(response => response.json())
+        .then(data => {
+            const monthSelect = document.getElementById('month');
+            monthSelect.innerHTML = ''; // Limpa as opções anteriores
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.month;
+                option.textContent = new Date(0, item.month - 1).toLocaleString('pt-BR', { month: 'long' });
+                monthSelect.appendChild(option);
+            });
+
+            // Inicializa o gráfico com o primeiro mês disponível para o ano selecionado
+            if (data.length > 0) {
+                updateChart(year, data[0].month);
+            }
+        })
+        .catch(error => console.error('Erro ao buscar meses disponíveis:', error));
+}
+
+function updateChart(year, month) {
+    fetch(`/data?month=${month}&year=${year}`)
         .then(response => response.json())
         .then(data => {
             console.log('Dados recebidos:', data); // Adicione este log para verificar os dados recebidos
@@ -28,7 +84,13 @@ window.onload = function() {
             const counts = data.map(item => item.count);
 
             const ctx = document.getElementById('myChart').getContext('2d');
-            const myChart = new Chart(ctx, {
+
+            // Destruir o gráfico existente antes de criar um novo
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -58,7 +120,7 @@ window.onload = function() {
             });
         })
         .catch(error => console.error('Erro ao buscar dados:', error)); // Adicione este log para verificar erros
-};
+}
 
 var editCarModal = document.getElementById('editCarModal');
 editCarModal.addEventListener('show.bs.modal', function (event) {

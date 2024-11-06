@@ -31,9 +31,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
-
-        
+        </div> 
 
         <div class="row auto-font">
             <div class="col-md-2 sidebar">
@@ -43,10 +41,19 @@
                 <h5>Informação 4</h5>
                 <h5>Informação 5</h5>
             </div>
-
+        
             <div class="col-md-6">
                 <div class="row">
-                    <canvas id="myChart" width="400" height="200"></canvas>
+                  <div class="mb-3">
+                    <label for="year" class="form-label">Ano:</label>
+                    <select id="year" class="form-select"></select>
+                </div>
+                <div class="mb-3">
+                    <label for="month" class="form-label">Mês:</label>
+                    <select id="month" class="form-select"></select>
+                </div>
+                <button id="updateChart" class="btn btn-primary">Atualizar Gráfico</button>
+                <canvas id="myChart" width="400" height="200"></canvas>
                     <div class="col-md-6 auto-font">
                         <div class="table-container">
                             <h3>Carros Cadastrados</h3>
