@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import uuid
@@ -97,7 +97,7 @@ def pagina_principal():
         # Passar os dados para o template
         return render_template('pagina-principal.html', carros=carros)
     else:
-        flash('Você precisa fazer login primeiro.', 'danger')
+        flash('Por favor, faça login para continuar.', 'danger')
         return redirect(url_for('login'))
 
 
@@ -153,6 +153,32 @@ def add_car():
         db.commit()
         flash('Carro cadastrado com sucesso!', 'success')
         return redirect(url_for('pagina_principal'))
+
+@app.route('/data')
+def get_data():
+    cursor = db.cursor(dictionary=True)
+    query = """
+       SELECT 
+            COUNT(ultima_troca_pneus) AS count, 
+            'Pneus' AS type 
+        FROM carros 
+        WHERE ultima_troca_pneus IS NOT NULL
+        UNION ALL
+        SELECT 
+            COUNT(ultima_troca_oleo) AS count, 
+            'Óleo' AS type 
+        FROM carros 
+        WHERE ultima_troca_oleo IS NOT NULL
+        UNION ALL
+        SELECT 
+            COUNT(ultima_revisao) AS count, 
+            'Revisão' AS type 
+        FROM carros 
+        WHERE ultima_revisao IS NOT NULL
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    return jsonify(data)
 
 @app.route('/logout')
 def logout():

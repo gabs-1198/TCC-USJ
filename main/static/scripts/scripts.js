@@ -17,7 +17,47 @@ function adjustFontColor(element) {
 
 window.onload = function() {
     const elements = document.querySelectorAll('.auto-font');
-    elements.forEach(adjustFontColor);  // Chama a função para cada elemento com a classe auto-font
+    elements.forEach(adjustFontColor);  
+    
+     fetch('/data')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dados recebidos:', data); // Adicione este log para verificar os dados recebidos
+
+            const labels = data.map(item => item.type);
+            const counts = data.map(item => item.count);
+
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantidade de Trocas',
+                        data: counts,
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Erro ao buscar dados:', error)); // Adicione este log para verificar erros
 };
 
 var editCarModal = document.getElementById('editCarModal');
