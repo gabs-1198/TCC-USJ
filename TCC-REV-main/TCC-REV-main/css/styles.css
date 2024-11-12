@@ -1,4 +1,3 @@
-/* styles.css */
 body {
     background-color: #000;
     color: white; 
@@ -23,15 +22,6 @@ body {
     padding: 20px;
 }
 
-.btn-change-bg {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    cursor: pointer;
-}
-
 .chart-container {
     position: relative;
     height: 400px;
@@ -53,24 +43,7 @@ body {
 
 .menu-container {
     margin-bottom: 20px;
-}   
-.modal-content {
-    background-color: #fff; /* Fundo branco */
-    color: #000; /* Texto preto */
 }
-.modal-header {
-    border-bottom: 1px solid #dee2e6;
-}
-.modal-title {
-    color: #000; /* Texto preto */
-}
-.form-label {
-    color: #000; /* Texto preto */
-}
-.form-control {
-    color: #000; /* Texto preto */
-    background-color: #fff; /* Fundo branco */
-}   
 
 .login-container { 
     display: flex; 
@@ -94,6 +67,12 @@ button {
 .form-container {
     max-width: 600px;
     margin: 0 auto;
+}
+
+.form-control {
+    background-color: #333;
+    border: 1px solid #444;
+    color: white;
 }
 
 .form-group {

@@ -143,61 +143,33 @@ def add_car():
         ultima_troca_pneus = request.form['ultima_troca_pneus']
         ultima_troca_oleo = request.form['ultima_troca_oleo']
         ultima_revisao = request.form['ultima_revisao']
+        data_cadastro = datetime.date.today()  # Obtém a data atual
 
         cursor = db.cursor()
         query = """
-            INSERT INTO carros (chassi, modelo, ano, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao) 
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO carros (chassi, modelo, ano, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, data_cadastro) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(query, (chassi, modelo, ano, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao))
+        cursor.execute(query, (chassi, modelo, ano, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, data_cadastro))
         db.commit()
         flash('Carro cadastrado com sucesso!', 'success')
         return redirect(url_for('pagina_principal'))
 
 @app.route('/data')
 def get_data():
-    month = request.args.get('month', type=int)
     year = request.args.get('year', type=int)
     
     cursor = db.cursor(dictionary=True)
     query = """
         SELECT 
-            COUNT(ultima_troca_pneus) AS count, 
-            'Pneus' AS type 
+            MONTH(data_cadastro) AS month, 
+            COUNT(*) AS count 
         FROM carros 
-        WHERE MONTH(ultima_troca_pneus) = %s 
-        AND YEAR(ultima_troca_pneus) = %s
-        UNION ALL
-        SELECT 
-            COUNT(ultima_troca_oleo) AS count, 
-            'Óleo' AS type 
-        FROM carros 
-        WHERE MONTH(ultima_troca_oleo) = %s 
-        AND YEAR(ultima_troca_oleo) = %s
-        UNION ALL
-        SELECT 
-            COUNT(ultima_revisao) AS count, 
-            'Revisão' AS type 
-        FROM carros 
-        WHERE MONTH(ultima_revisao) = %s 
-        AND YEAR(ultima_revisao) = %s
+        WHERE YEAR(data_cadastro) = %s 
+        GROUP BY MONTH(data_cadastro)
+        ORDER BY MONTH(data_cadastro)
     """
-    cursor.execute(query, (month, year, month, year, month, year))
-    data = cursor.fetchall()
-    return jsonify(data)
-
-@app.route('/available_dates')
-def get_available_dates():
-    cursor = db.cursor(dictionary=True)
-    query = """
-        SELECT DISTINCT YEAR(ultima_troca_pneus) AS year, MONTH(ultima_troca_pneus) AS month FROM carros WHERE ultima_troca_pneus IS NOT NULL
-        UNION
-        SELECT DISTINCT YEAR(ultima_troca_oleo) AS year, MONTH(ultima_troca_oleo) AS month FROM carros WHERE ultima_troca_oleo IS NOT NULL
-        UNION
-        SELECT DISTINCT YEAR(ultima_revisao) AS year, MONTH(ultima_revisao) AS month FROM carros WHERE ultima_revisao IS NOT NULL
-        ORDER BY year, month
-    """
-    cursor.execute(query)
+    cursor.execute(query, (year,))
     data = cursor.fetchall()
     return jsonify(data)
 
@@ -205,30 +177,9 @@ def get_available_dates():
 def get_available_years():
     cursor = db.cursor(dictionary=True)
     query = """
-        SELECT DISTINCT YEAR(ultima_troca_pneus) AS year FROM carros WHERE ultima_troca_pneus IS NOT NULL
-        UNION
-        SELECT DISTINCT YEAR(ultima_troca_oleo) AS year FROM carros WHERE ultima_troca_oleo IS NOT NULL
-        UNION
-        SELECT DISTINCT YEAR(ultima_revisao) AS year FROM carros WHERE ultima_revisao IS NOT NULL
-        ORDER BY year
+        SELECT DISTINCT YEAR(data_cadastro) AS year FROM carros ORDER BY year
     """
     cursor.execute(query)
-    data = cursor.fetchall()
-    return jsonify(data)
-
-@app.route('/available_months')
-def get_available_months():
-    year = request.args.get('year', type=int)
-    cursor = db.cursor(dictionary=True)
-    query = """
-        SELECT DISTINCT MONTH(ultima_troca_pneus) AS month FROM carros WHERE YEAR(ultima_troca_pneus) = %s AND ultima_troca_pneus IS NOT NULL
-        UNION
-        SELECT DISTINCT MONTH(ultima_troca_oleo) AS month FROM carros WHERE YEAR(ultima_troca_oleo) = %s AND ultima_troca_oleo IS NOT NULL
-        UNION
-        SELECT DISTINCT MONTH(ultima_revisao) AS month FROM carros WHERE YEAR(ultima_revisao) = %s AND ultima_revisao IS NOT NULL
-        ORDER BY month
-    """
-    cursor.execute(query, (year, year, year))
     data = cursor.fetchall()
     return jsonify(data)
 

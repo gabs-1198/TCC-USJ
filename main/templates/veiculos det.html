@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Veículos Detalhados</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img src="C:\Users\Raphaela\Desktop\tcc\foto-logo-sfundo.png" alt="Logo" class="logo my-3">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <h5>Dashboard</h5>
+                <h5>Cadastros</h5>
+                <h5>Veículos Det</h5>
+                <h5>Anotações</h5>
+                <h5>Perfil</h5>
+                <h5><a href="#" style="color: white;">Sair</a></h5>
+            </div>
+
+<!-- Modal de Edição de Carro -->
+    <div class="modal fade" id="editCarModal" tabindex="-1" aria-labelledby="editCarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCarModalLabel">Editar Carro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCarForm" action="{{ url_for('edit_car') }}" method="POST">
+                        <input type="hidden" id="editChassi" name="chassi">
+                        <div class="mb-3">
+                            <label for="modelo" class="form-label" color="black">Modelo</label>
+                            <input type="text" class="form-control" name="modelo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ano" class="form-label" color="black">Ano</label>
+                            <input type="text" class="form-control" name="ano" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ultima_troca_pneus" class="form-label" color="black">Última Troca de Pneus</label>
+                            <input type="date" class="form-control" name="ultima_troca_pneus" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ultima_troca_oleo" class="form-label" color="black">Última Troca de Óleo</label>
+                            <input type="date" class="form-control" name="ultima_troca_oleo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ultima_revisao" class="form-label" color="black">Última Revisão</label>
+                            <input type="date" class="form-control" name="ultima_revisao" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <div class="col-md-10 main-content">
+                <h3>Veículos Detalhados</h3>
+
+                <div class="table-container">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="table-row">Nome do Veículo</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">Ano do Veículo</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">Última Manutenção</div>
+                        </div>
+                    </div>
+
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="table-row">Carro XYZ</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">2020</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">01/12/2023</div>
+                        </div>
+                    </div>
+
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="table-row">Tipo de Manutenção</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">Código (COD)</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">
+                                <button class="btn btn-warning">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="table-row">Emergencial</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">COD12345</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
