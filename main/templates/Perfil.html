@@ -6,70 +6,93 @@
     <title>Perfil</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="css/styles.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 text-center">
-                <img src="C:\Users\Raphaela\Desktop\tcc\foto-logo-sfundo.png" alt="Logo" class="logo my-3">
+                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-2 sidebar">
-                <h5>Dashboard</h5>
-                <h5>Cadastros</h5>
-                <h5>Veículos Det</h5>
-                <h5>Anotações</h5>
-                <h5>Perfil</h5>
-                <h5><a href="#" style="color: white;">Sair</a></h5>
+                <h5><a href="{{ url_for('dashboard') }}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('cadastros') }}">Cadastro</a></h5>
+                <h5><a href="{{ url_for('anotacoes') }}">Anotações</a></h5>
+                <h5><a href="{{ url_for('perfil') }}">Perfil</a></h5>
+                <h5><a href="{{ url_for('login') }}" style="color: white;">Sair</a></h5>
             </div>
 
             <div class="col-md-10 main-content">
                 <div class="form-container">
                     <h3>Perfil da Empresa</h3>
-                    <form>
+                    <form method="POST" action="{{ url_for('add_empresa') }}">
                         <div class="form-group">
                             <label for="nomeEmpresa">Nome da Empresa</label>
-                            <input type="text" class="form-control" id="nomeEmpresa" required>
+                            <input type="text" class="form-control" id="nomeEmpresa" name="nome" required>
                         </div>
 
                         <div class="form-group">
                             <label for="responsavel">Nome do Responsável</label>
-                            <input type="text" class="form-control" id="responsavel" required>
+                            <input type="text" class="form-control" id="responsavel" name="responsavel" required>
                         </div>
 
                         <div class="form-group">
                             <label for="estado">Estado</label>
-                            <select class="form-control" id="estado" required>
-                                <option value="SP">São Paulo</option>
-                                <option value="RJ">Rio de Janeiro</option>
+                            <select class="form-control" id="estado" name="estado" required>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
                                 <option value="MG">Minas Gerais</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="SC">Santa Catarina</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
                                 <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="cnpj">CNPJ da Empresa</label>
-                            <input type="text" class="form-control" id="cnpj" placeholder="XX.XXX.XXX/XXXX-XX" required>
+                            <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="XX.XXX.XXX/XXXX-XX" required>
                         </div>
 
                         <div class="form-group">
                             <label for="telefone">Telefone</label>
-                            <input type="text" class="form-control" id="telefone" placeholder="(XX) XXXX-XXXX" required>
+                            <input type="text" class="form-control" id="telefone" name="telefone" placeholder="(XX) XXXX-XXXX" required>
                         </div>
 
-                        <button type="submit" class="btn btn-custom">Salvar Perfil</button>
+                        <div class="form-group">
+                            <label for="username">Nome de Usuário</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Salvar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

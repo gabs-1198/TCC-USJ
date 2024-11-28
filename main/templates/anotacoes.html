@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Anotações</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <h5><a href="{{ url_for('dashboard') }}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('cadastros') }}">Cadastro</a></h5>
+                <h5><a href="{{ url_for('anotacoes') }}">Anotações</a></h5>
+                <h5><a href="{{ url_for('perfil') }}">Perfil</a></h5>
+                <h5><a href="{{ url_for('login') }}" style="color: white;">Sair</a></h5>
+            </div>
+
+            <div class="col-md-10 main-content">
+                <div class="form-container">
+                    <h3>Nova Anotação</h3>
+                    <form method="POST" action="{{ url_for('add_anotacao') }}">
+                        <div class="form-group">
+                            <label for="chassi">Chassi</label>
+                            <select class="form-control" id="chassi" name="chassi" required>
+                                {% for carro in carros %}
+                                    <option value="{{ carro.chassi }}">{{ carro.chassi }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tituloAnotacao">Título</label>
+                            <input type="text" class="form-control" id="tituloAnotacao" name="titulo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descricaoAnotacao">Descrição</label>
+                            <textarea class="form-control" id="descricaoAnotacao" name="descricao" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Anotação</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <h3>Histórico de Anotações</h3>
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="table-row">Título</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">Data</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">Descrição</div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="table-row">Ação</div>
+                        </div>
+                    </div>
+                    {% for anotacao in anotacoes %}
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="table-row">{{ anotacao.titulo }}</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">{{ anotacao.data_anotacao }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="table-row">{{ anotacao.descricao }}</div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="table-row">
+                                <form method="POST" action="{{ url_for('delete_anotacao', id=anotacao.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm btn-excluir" onclick="return confirm('Tem certeza que deseja excluir esta anotação?');">Excluir</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts/scripts.js') }}"></script>
+</body>
+</html>

@@ -108,3 +108,28 @@ button {
 .btn-custom:hover {
     background-color: #0056b3;
 }
+
+.table-container .table-row {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-container .row {
+    margin-bottom: 10px;
+}
+
+.btn-excluir {
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+.table-container .table {
+    color: white;
+}
+
+.table-container .table th{
+    color: white;
+}
+.table-container .table td {
+    color: white;
+}

@@ -87,31 +87,34 @@ function updateChart(year) {
         .catch(error => console.error('Erro ao buscar dados:', error)); // Adicione este log para verificar erros
 }
 
-const editCarModal = document.getElementById('editCarModal');
-editCarModal.addEventListener('show.bs.modal', function (event) {
-    const button = event.relatedTarget;
-    const chassi = button.getAttribute('data-chassi');
-    const modelo = button.getAttribute('data-modelo');
-    const ano = button.getAttribute('data-ano');
-    const ultimaTrocaPneus = button.getAttribute('data-ultima_troca_pneus');
-    const ultimaTrocaOleo = button.getAttribute('data-ultima_troca_oleo');
-    const ultimaRevisao = button.getAttribute('data-ultima_revisao');
+document.addEventListener('DOMContentLoaded', function() {
+    const editCarModal = document.getElementById('editCarModal');
+    editCarModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const chassi = button.getAttribute('data-chassi');
+        const modelo = button.getAttribute('data-modelo');
+        const ano = button.getAttribute('data-ano');
+        const placa = button.getAttribute('data-placa');
+        const ultimaTrocaPneus = button.getAttribute('data-ultima_troca_pneus');
+        const ultimaTrocaOleo = button.getAttribute('data-ultima_troca_oleo');
+        const ultimaRevisao = button.getAttribute('data-ultima_revisao');
 
-    const modalTitle = editCarModal.querySelector('.modal-title');
-    const editChassiInput = editCarModal.querySelector('#editChassi');
-    const editModeloInput = editCarModal.querySelector('input[name="modelo"]');
-    const editAnoInput = editCarModal.querySelector('input[name="ano"]');
-    const editUltimaTrocaPneusInput = editCarModal.querySelector('input[name="ultima_troca_pneus"]');
-    const editUltimaTrocaOleoInput = editCarModal.querySelector('input[name="ultima_troca_oleo"]');
-    const editUltimaRevisaoInput = editCarModal.querySelector('input[name="ultima_revisao"]');
+        const editChassiInput = document.getElementById('editChassi');
+        const editModeloInput = document.getElementById('editModelo');
+        const editAnoInput = document.getElementById('editAno');
+        const editPlacaInput = document.getElementById('editPlaca');
+        const editUltimaTrocaPneusInput = document.getElementById('editUltimaTrocaPneus');
+        const editUltimaTrocaOleoInput = document.getElementById('editUltimaTrocaOleo');
+        const editUltimaRevisaoInput = document.getElementById('editUltimaRevisao');
 
-    modalTitle.textContent = 'Editar Carro: ' + modelo;
-    editChassiInput.value = chassi;
-    editModeloInput.value = modelo;
-    editAnoInput.value = ano;
-    editUltimaTrocaPneusInput.value = ultimaTrocaPneus;
-    editUltimaTrocaOleoInput.value = ultimaTrocaOleo;
-    editUltimaRevisaoInput.value = ultimaRevisao;
+        editChassiInput.value = chassi;
+        editModeloInput.value = modelo;
+        editAnoInput.value = ano;
+        editPlacaInput.value = placa;
+        editUltimaTrocaPneusInput.value = ultimaTrocaPneus;
+        editUltimaTrocaOleoInput.value = ultimaTrocaOleo;
+        editUltimaRevisaoInput.value = ultimaRevisao;
+    });
 });
 
 function navegar(url) {
