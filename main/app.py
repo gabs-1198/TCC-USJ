@@ -114,17 +114,29 @@ def edit_car():
         chassi = request.form['chassi']
         modelo = request.form['modelo']
         ano = request.form['ano']
+        placa = request.form['placa']
         ultima_troca_pneus = request.form['ultima_troca_pneus']
         ultima_troca_oleo = request.form['ultima_troca_oleo']
         ultima_revisao = request.form['ultima_revisao']
+        ultima_troca_vela = request.form['ultima_troca_vela']
+        ultima_troca_caixa_cambio = request.form['ultima_troca_caixa_cambio']
+        ultima_troca_suspensao = request.form['ultima_troca_suspensao']
+        ultima_troca_bateria = request.form['ultima_troca_bateria']
+        validade_bateria = request.form['validade_bateria']
+        ultima_troca_correia_dentada = request.form['ultima_troca_correia_dentada']
+        proxima_revisao = (datetime.datetime.strptime(ultima_revisao, '%Y-%m-%d') + datetime.timedelta(days=180)).date()
 
         cursor = db.cursor()
         query = """
             UPDATE carros 
-            SET modelo = %s, ano = %s, ultima_troca_pneus = %s, ultima_troca_oleo = %s, ultima_revisao = %s 
+            SET modelo = %s, ano = %s, placa = %s, ultima_troca_pneus = %s, ultima_troca_oleo = %s, ultima_revisao = %s,
+                ultima_troca_vela = %s, ultima_troca_caixa_cambio = %s, ultima_troca_suspensao = %s, 
+                ultima_troca_bateria = %s, validade_bateria = %s, ultima_troca_correia_dentada = %s, proxima_revisao = %s
             WHERE chassi = %s
         """
-        cursor.execute(query, (modelo, ano, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, chassi))
+        cursor.execute(query, (modelo, ano, placa, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, 
+                               ultima_troca_vela, ultima_troca_caixa_cambio, ultima_troca_suspensao, 
+                               ultima_troca_bateria, validade_bateria, ultima_troca_correia_dentada, proxima_revisao, chassi))
         db.commit()
         flash('Informações do carro atualizadas com sucesso!', 'success')
     except Exception as e:
@@ -145,7 +157,15 @@ def carros_por_empresa():
         carros = []
         if request.method == 'POST':
             empresa_id = request.form['empresa_id']
-            cursor.execute("SELECT * FROM carros WHERE empresa_id = %s", (empresa_id,))
+            cursor.execute("""
+                SELECT chassi, modelo, ano, placa, ultima_revisao, 
+                       DATE_ADD(ultima_revisao, INTERVAL 6 MONTH) AS proxima_revisao,
+                       ultima_troca_pneus, ultima_troca_oleo, ultima_troca_vela, 
+                       ultima_troca_caixa_cambio, ultima_troca_suspensao, 
+                       ultima_troca_bateria, validade_bateria, ultima_troca_correia_dentada
+                FROM carros 
+                WHERE empresa_id = %s
+            """, (empresa_id,))
             carros = cursor.fetchall()
 
         return render_template('cadastros.html', empresas=empresas, carros=carros)
@@ -165,6 +185,13 @@ def add_car():
         ultima_troca_pneus = request.form['ultima_troca_pneus']
         ultima_troca_oleo = request.form['ultima_troca_oleo']
         ultima_revisao = request.form['ultima_revisao']
+        ultima_troca_vela = request.form['ultima_troca_vela']
+        ultima_troca_caixa_cambio = request.form['ultima_troca_caixa_cambio']
+        ultima_troca_suspensao = request.form['ultima_troca_suspensao']
+        ultima_troca_bateria = request.form['ultima_troca_bateria']
+        validade_bateria = request.form['validade_bateria']
+        ultima_troca_correia_dentada = request.form['ultima_troca_correia_dentada']
+        proxima_revisao = (datetime.datetime.strptime(ultima_revisao, '%Y-%m-%d') + datetime.timedelta(days=180)).date()
         data_cadastro = datetime.date.today()
 
         cursor = db.cursor(dictionary=True)
@@ -175,8 +202,14 @@ def add_car():
             flash('Placa já existe!', 'danger')
         else:
             cursor.execute(
-                "INSERT INTO carros (chassi, modelo, ano, placa, empresa_id, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, data_cadastro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                (chassi, modelo, ano, placa, empresa_id, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, data_cadastro)
+                """INSERT INTO carros 
+                (chassi, modelo, ano, placa, empresa_id, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, 
+                ultima_troca_vela, ultima_troca_caixa_cambio, ultima_troca_suspensao, ultima_troca_bateria, 
+                validade_bateria, ultima_troca_correia_dentada, proxima_revisao, data_cadastro) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                (chassi, modelo, ano, placa, empresa_id, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, 
+                ultima_troca_vela, ultima_troca_caixa_cambio, ultima_troca_suspensao, ultima_troca_bateria, 
+                validade_bateria, ultima_troca_correia_dentada, proxima_revisao, data_cadastro)
             )
             db.commit()
             flash('Carro cadastrado com sucesso!', 'success')

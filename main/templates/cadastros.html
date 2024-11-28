@@ -44,27 +44,28 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>Placa</th>
                                 <th>Chassi</th>
                                 <th>Modelo</th>
                                 <th>Ano</th>
-                                <th>Placa</th>
-                                <th>Última Troca de Pneus</th>
-                                <th>Última Troca de Óleo</th>
                                 <th>Última Revisão</th>
+                                <th>Previsão de Revisão</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for carro in carros %}
                                 <tr>
+                                    <td>{{ carro.placa }}</td>
                                     <td>{{ carro.chassi }}</td>
                                     <td>{{ carro.modelo }}</td>
                                     <td>{{ carro.ano }}</td>
-                                    <td>{{ carro.placa }}</td>
-                                    <td>{{ carro.ultima_troca_pneus }}</td>
-                                    <td>{{ carro.ultima_troca_oleo }}</td>
                                     <td>{{ carro.ultima_revisao }}</td>
+                                    <td>{{ carro.proxima_revisao }}</td>
                                     <td>
+                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detailsCarModal" data-chassi="{{ carro.chassi }}" data-modelo="{{ carro.modelo }}" data-ano="{{ carro.ano }}" data-placa="{{ carro.placa }}" data-ultima_troca_pneus="{{ carro.ultima_troca_pneus }}" data-ultima_troca_oleo="{{ carro.ultima_troca_oleo }}" data-ultima_revisao="{{ carro.ultima_revisao }}" data-ultima_troca_vela="{{ carro.ultima_troca_vela }}" data-ultima_troca_caixa_cambio="{{ carro.ultima_troca_caixa_cambio }}" data-ultima_troca_suspensao="{{ carro.ultima_troca_suspensao }}" data-ultima_troca_bateria="{{ carro.ultima_troca_bateria }}" data-validade_bateria="{{ carro.validade_bateria }}" data-ultima_troca_correia_dentada="{{ carro.ultima_troca_correia_dentada }}" data-proxima_revisao="{{ carro.proxima_revisao }}">
+                                            Detalhes
+                                        </button>
                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCarModal" data-chassi="{{ carro.chassi }}" data-modelo="{{ carro.modelo }}" data-ano="{{ carro.ano }}" data-placa="{{ carro.placa }}" data-ultima_troca_pneus="{{ carro.ultima_troca_pneus }}" data-ultima_troca_oleo="{{ carro.ultima_troca_oleo }}" data-ultima_revisao="{{ carro.ultima_revisao }}">
                                             Editar
                                         </button>
@@ -121,6 +122,37 @@
                             <button type="submit" class="btn btn-primary">Salvar</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Carro -->
+    <div class="modal fade" id="detailsCarModal" tabindex="-1" aria-labelledby="detailsCarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsCarModalLabel">Detalhes do Veículo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Chassi:</strong> <span id="detailsChassi"></span></p>
+                    <p><strong>Modelo:</strong> <span id="detailsModelo"></span></p>
+                    <p><strong>Ano:</strong> <span id="detailsAno"></span></p>
+                    <p><strong>Placa:</strong> <span id="detailsPlaca"></span></p>
+                    <p><strong>Última Troca de Pneus:</strong> <span id="detailsUltimaTrocaPneus"></span></p>
+                    <p><strong>Última Troca de Óleo:</strong> <span id="detailsUltimaTrocaOleo"></span></p>
+                    <p><strong>Última Revisão:</strong> <span id="detailsUltimaRevisao"></span></p>
+                    <p><strong>Última Troca de Vela de Ignição:</strong> <span id="detailsUltimaTrocaVela"></span></p>
+                    <p><strong>Última Troca de Caixa de Câmbio:</strong> <span id="detailsUltimaTrocaCaixaCambio"></span></p>
+                    <p><strong>Última Troca de Suspensão:</strong> <span id="detailsUltimaTrocaSuspensao"></span></p>
+                    <p><strong>Última Troca de Bateria:</strong> <span id="detailsUltimaTrocaBateria"></span></p>
+                    <p><strong>Validade da Bateria Atual:</strong> <span id="detailsValidadeBateria"></span></p>
+                    <p><strong>Última Troca de Correia Dentada:</strong> <span id="detailsUltimaTrocaCorreiaDentada"></span></p>
+                    <p><strong>Previsão de Revisão:</strong> <span id="detailsProximaRevisao"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
