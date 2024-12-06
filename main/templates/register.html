@@ -1,42 +1,77 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registro - Movendo</title>
-<link href="static/css/styles.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Movendo</title>
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Movendo</h1>
-        <form method="POST" action="{{ url_for('register') }}">
-            <div class="mb-3">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Usuário" required>
+    <div class="login-container d-flex align-items-center justify-content-center">
+        <div class="form-container p-4 shadow-sm rounded">
+            <h1 class="text-center mb-4">Movendo</h1>
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Usuário" required>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" id="sobrenome" name="sobrenome" placeholder="Sobrenome" required>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="date" class="form-control" id="data_nasc" name="data_nasc" placeholder="Data de Nascimento" required>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" id="funcao" name="funcao" placeholder="Função" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="is_admin" class="form-label">Administrador</label>
+                    <select class="form-control" id="is_admin" name="is_admin" required onchange="toggleEmpresaField()">
+                        <option value="1">Sim</option>
+                        <option value="0">Não</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3" id="empresa-field" style="display: none;">
+                    <label for="empresa_id" class="form-label">Empresa (Opcional)</label>
+                    <select class="form-control" id="empresa_id" name="empresa_id">
+                        <option value="">Selecione uma empresa</option>
+                        {% for empresa in empresas %}
+                            <option value="{{ empresa.id }}">{{ empresa.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+            <p class="mt-3">
+                <a href="{{ url_for('login') }}">Já tem uma conta? Faça login</a>
+            </p>
+            <div id="support-message" class="alert alert-info mt-3">
+                Em caso de problemas, entre em contato com o suporte através do email suporte@movendo.com
             </div>
-            <div class="mb-3">
-                <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required>
-            </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
-            </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" id="sobrenome" name="sobrenome" placeholder="Sobrenome" required>
-            </div>
-            <div class="mb-3">
-                <input type="date" class="form-control" id="data_nasc" name="data_nasc" placeholder="Data de Nascimento" required>
-            </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" id="funcao" name="funcao" placeholder="Função" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Registrar</button>
-        </form>
-        <p class="mt-3">
-            <a href="{{ url_for('login') }}">Já tem uma conta? Faça login</a>
-        </p>
-        <div id="support-message" class="alert alert-info mt-3" style="display: none;">
-            Em caso de problemas, entre em contato com o suporte através do email suporte@movendo.com
         </div>
     </div>
-<script src="static/scripts/scripts.js"></script>
+<script>
+    function toggleEmpresaField() {
+        const isAdmin = document.getElementById('is_admin').value;
+        const empresaField = document.getElementById('empresa-field');
+        if (isAdmin == '1') {
+            empresaField.style.display = 'none';
+            document.getElementById('empresa_id').removeAttribute('required');
+        } else {
+            empresaField.style.display = 'block';
+            document.getElementById('empresa_id').setAttribute('required', 'required');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleEmpresaField(); // Chama a função ao carregar a página para definir o estado inicial
+    });
+</script>
 </body>
 </html>

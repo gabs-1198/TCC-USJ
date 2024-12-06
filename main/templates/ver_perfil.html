@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Perfil da Empresa</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <h5><a href="{{ url_for('cliente_dashboard') }}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('visualizar_cadastros') }}">Visualizar Cadastros</a></h5>
+                <h5><a href="{{ url_for('anotacoes_usuario') }}">Anotações</a></h5>
+                <h5><a href="{{ url_for('ver_perfil') }}">Perfil</a></h5>
+                <h5><a href="{{ url_for('logout') }}" style="color: white;">Sair</a></h5>
+            </div>
+
+            <div class="col-md-10 main-content">
+                <div class="form-container">
+                    <h3>Perfil da Empresa</h3>
+                    <div class="form-group">
+                        <label for="nomeEmpresa">Nome da Empresa</label>
+                        <input type="text" class="form-control" id="nomeEmpresa" name="nome" value="{{ empresa.nome }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responsavel">Nome do Responsável</label>
+                        <input type="text" class="form-control" id="responsavel" name="responsavel" value="{{ empresa.responsavel }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <input type="text" class="form-control" id="estado" name="estado" value="{{ empresa.estado }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cnpj">CNPJ</label>
+                        <input type="text" class="form-control" id="cnpj" name="cnpj" value="{{ empresa.cnpj }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone">Telefone</label>
+                        <input type="text" class="form-control" id="telefone" name="telefone" value="{{ empresa.telefone }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Usuário</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ empresa.username }}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

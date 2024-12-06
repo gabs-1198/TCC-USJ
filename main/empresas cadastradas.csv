@@ -1,0 +1,6 @@
+id,nome,responsavel,estado,cnpj,telefone
+1,"Empresa A","Responsável A",SP,00.000.000/0001-01,"(11) 1111-1111"
+2,"Empresa B","Responsável B",RJ,00.000.000/0001-02,"(21) 2222-2222"
+3,"Empresa C","Responsável C",MG,00.000.000/0001-03,"(31) 3333-3333"
+4,"Empresa D","Responsável D",RS,00.000.000/0001-04,"(51) 4444-4444"
+5,"Empresa E","Responsável E",BA,00.000.000/0001-05,"(71) 5555-5555"

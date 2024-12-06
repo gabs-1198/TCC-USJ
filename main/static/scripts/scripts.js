@@ -1,7 +1,12 @@
+/**
+ * Calculate the luminance of a given RGB color.
+ * @param {string} color - The RGB color in the format 'rgb(r, g, b)'.
+ * @returns {number} The luminance value of the color.
+ */
 function getLuminance(color) {
     const rgb = color.match(/\d+/g);
-    const r = rgb[0], g = rgb[1], b = rgb[2];
-    const luminance = 0.2126 * r / 255 + 0.7152 * g / 255 + 0.0722 * b / 255;
+    const r = parseInt(rgb[0]), g = parseInt(rgb[1]), b = parseInt(rgb[2]);
+    const luminance = 0.2126 * (r / 255) + 0.7152 * (g / 255) + 0.0722 * (b / 255);
     return luminance;
 }
 
@@ -18,13 +23,24 @@ function adjustFontColor(element) {
 let myChart = null;
 
 window.onload = function() {
-    const elements = document.querySelectorAll('.auto-font');
-    elements.forEach(adjustFontColor);
+    // Ensure Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded. Please include the Chart.js library.');
+        return;
+    }
 
+    const yearSelect = document.getElementById('year');
+    const currentYear = new Date().getFullYear();
+
+    // Preencher o select com os anos disponíveis
     fetch('/available_years')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            const yearSelect = document.getElementById('year');
             data.forEach(item => {
                 const option = document.createElement('option');
                 option.value = item.year;
@@ -32,63 +48,63 @@ window.onload = function() {
                 yearSelect.appendChild(option);
             });
 
-            // Inicializa o gráfico com o primeiro ano disponível
-            if (data.length > 0) {
-                updateChart(data[0].year); // Inicializa com o primeiro ano disponível
-            }
+            // Selecionar o ano atual por padrão
+            yearSelect.value = currentYear;
+            updateChart(currentYear);
         })
         .catch(error => console.error('Erro ao buscar anos disponíveis:', error));
-    document.getElementById('year').addEventListener('change', function() {
-        const year = this.value;
-        updateChart(year);
+
+    yearSelect.addEventListener('change', function() {
+        const selectedYear = yearSelect.value;
+        updateChart(selectedYear);
     });
-};
 
-function updateChart(year) {
-    fetch(`/data?year=${year}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log('Dados recebidos:', data); // Adicione este log para verificar os dados recebidos
+    function updateChart(year) {
+        fetch(`/data?year=${year}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Dados recebidos:', data); // Adicione este log para verificar os dados recebidos
 
-            const labels = data.map(item => new Date(0, item.month - 1).toLocaleString('pt-BR', { month: 'long' }));
-            const counts = data.map(item => item.count);
+                const labels = data.map(item => new Date(0, item.month - 1).toLocaleString('pt-BR', { month: 'long' }));
+                const counts = data.map(item => item.count);
 
-            const ctx = document.getElementById('lineChart').getContext('2d');
+                const ctx = document.getElementById('lineChart').getContext('2d');
 
-            // Destruir o gráfico existente antes de criar um novo
-            if (myChart) {
-                myChart.destroy();
-            }
+                // Destruir o gráfico existente antes de criar um novo
+                if (myChart) {
+                    myChart.destroy();
+                }
 
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Número de Carros Cadastrados',
-                        data: counts,
-                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: 'rgba(255, 255, 255, 1)',
-                        pointBorderColor: 'rgba(0, 123, 255, 1)',
-                        pointRadius: 5
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Número de Carros Cadastrados',
+                            data: counts,
+                            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(255, 255, 255, 1)',
+                            pointBorderColor: 'rgba(0, 123, 255, 1)',
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
-        })
-        .catch(error => console.error('Erro ao buscar dados:', error)); // Adicione este log para verificar erros
-}
+                });
+            })
+            .catch(error => console.error('Erro ao buscar dados:', error)); // Adicione este log para verificar erros
+    }
+};
 
-document.addEventListener('DOMContentLoaded', function() {
-    const editCarModal = document.getElementById('editCarModal');
+const editCarModal = document.getElementById('editCarModal');
+if (editCarModal) {
     editCarModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const chassi = button.getAttribute('data-chassi');
@@ -105,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const validadeBateria = button.getAttribute('data-validade_bateria');
         const ultimaTrocaCorreiaDentada = button.getAttribute('data-ultima_troca_correia_dentada');
         const proximaRevisao = button.getAttribute('data-proxima_revisao');
+        const scannerInstalado = button.getAttribute('data-scanner_instalado');
 
         const editChassiInput = document.getElementById('editChassi');
         const editModeloInput = document.getElementById('editModelo');
@@ -120,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const editValidadeBateriaInput = document.getElementById('editValidadeBateria');
         const editUltimaTrocaCorreiaDentadaInput = document.getElementById('editUltimaTrocaCorreiaDentada');
         const editProximaRevisaoInput = document.getElementById('editProximaRevisao');
+        const editScannerInstaladoInput = document.getElementById('editScannerInstalado');
 
         editChassiInput.value = chassi;
         editModeloInput.value = modelo;
@@ -135,9 +153,12 @@ document.addEventListener('DOMContentLoaded', function() {
         editValidadeBateriaInput.value = validadeBateria;
         editUltimaTrocaCorreiaDentadaInput.value = ultimaTrocaCorreiaDentada;
         editProximaRevisaoInput.value = proximaRevisao;
+        editScannerInstaladoInput.value = scannerInstalado;
     });
+}
 
-    const detailsCarModal = document.getElementById('detailsCarModal');
+const detailsCarModal = document.getElementById('detailsCarModal');
+if (detailsCarModal) {
     detailsCarModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const chassi = button.getAttribute('data-chassi');
@@ -155,37 +176,62 @@ document.addEventListener('DOMContentLoaded', function() {
         const ultimaTrocaCorreiaDentada = button.getAttribute('data-ultima_troca_correia_dentada');
         const proximaRevisao = button.getAttribute('data-proxima_revisao');
 
-        const detailsChassi = document.getElementById('detailsChassi');
-        const detailsModelo = document.getElementById('detailsModelo');
-        const detailsAno = document.getElementById('detailsAno');
-        const detailsPlaca = document.getElementById('detailsPlaca');
-        const detailsUltimaTrocaPneus = document.getElementById('detailsUltimaTrocaPneus');
-        const detailsUltimaTrocaOleo = document.getElementById('detailsUltimaTrocaOleo');
-        const detailsUltimaRevisao = document.getElementById('detailsUltimaRevisao');
-        const detailsUltimaTrocaVela = document.getElementById('detailsUltimaTrocaVela');
-        const detailsUltimaTrocaCaixaCambio = document.getElementById('detailsUltimaTrocaCaixaCambio');
-        const detailsUltimaTrocaSuspensao = document.getElementById('detailsUltimaTrocaSuspensao');
-        const detailsUltimaTrocaBateria = document.getElementById('detailsUltimaTrocaBateria');
-        const detailsValidadeBateria = document.getElementById('detailsValidadeBateria');
-        const detailsUltimaTrocaCorreiaDentada = document.getElementById('detailsUltimaTrocaCorreiaDentada');
-        const detailsProximaRevisao = document.getElementById('detailsProximaRevisao');
-
-        detailsChassi.textContent = chassi;
-        detailsModelo.textContent = modelo;
-        detailsAno.textContent = ano;
-        detailsPlaca.textContent = placa;
-        detailsUltimaTrocaPneus.textContent = ultimaTrocaPneus;
-        detailsUltimaTrocaOleo.textContent = ultimaTrocaOleo;
-        detailsUltimaRevisao.textContent = ultimaRevisao;
-        detailsUltimaTrocaVela.textContent = ultimaTrocaVela;
-        detailsUltimaTrocaCaixaCambio.textContent = ultimaTrocaCaixaCambio;
-        detailsUltimaTrocaSuspensao.textContent = ultimaTrocaSuspensao;
-        detailsUltimaTrocaBateria.textContent = ultimaTrocaBateria;
-        detailsValidadeBateria.textContent = validadeBateria;
-        detailsUltimaTrocaCorreiaDentada.textContent = ultimaTrocaCorreiaDentada;
-        detailsProximaRevisao.textContent = proximaRevisao;
+        document.getElementById('detailsChassi').textContent = chassi;
+        document.getElementById('detailsModelo').textContent = modelo;
+        document.getElementById('detailsAno').textContent = ano;
+        document.getElementById('detailsPlaca').textContent = placa;
+        document.getElementById('detailsUltimaTrocaPneus').textContent = ultimaTrocaPneus;
+        document.getElementById('detailsUltimaTrocaOleo').textContent = ultimaTrocaOleo;
+        document.getElementById('detailsUltimaRevisao').textContent = ultimaRevisao;
+        document.getElementById('detailsUltimaTrocaVela').textContent = ultimaTrocaVela;
+        document.getElementById('detailsUltimaTrocaCaixaCambio').textContent = ultimaTrocaCaixaCambio;
+        document.getElementById('detailsUltimaTrocaSuspensao').textContent = ultimaTrocaSuspensao;
+        document.getElementById('detailsUltimaTrocaBateria').textContent = ultimaTrocaBateria;
+        document.getElementById('detailsValidadeBateria').textContent = validadeBateria;
+        document.getElementById('detailsUltimaTrocaCorreiaDentada').textContent = ultimaTrocaCorreiaDentada;
+        document.getElementById('detailsProximaRevisao').textContent = proximaRevisao;
     });
-});
+}
+
+const supportLink = document.getElementById('support-link');
+const supportMessage = document.getElementById('support-message');
+if (supportLink && supportMessage) {
+    supportLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        supportMessage.style.display = 'block';
+    });
+}
+
+const cadastroForm = document.getElementById('cadastroForm');
+if (cadastroForm) {
+    cadastroForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Veículo cadastrado com sucesso!');
+    });
+}
+
+const supportLink2 = document.getElementById('support-link');
+const supportMessage2 = document.getElementById('support-message');
+if (supportLink2 && supportMessage2) {
+    supportLink2.addEventListener('click', function(event) {
+        event.preventDefault();
+        if (supportMessage2.style.display === 'none') {
+            supportMessage2.style.display = 'block';
+        } else {
+            supportMessage2.style.display = 'none';
+        }
+    });
+}
+
+const solicitarModificacaoModal = document.getElementById('solicitarModificacaoModal');
+if (solicitarModificacaoModal) {
+    solicitarModificacaoModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const chassi = button.getAttribute('data-chassi');
+        const modificacaoChassiInput = document.getElementById('modificacaoChassi');
+        modificacaoChassiInput.value = chassi;
+    });
+}
 
 function navegar(url) {
     window.location.href = url;
@@ -194,23 +240,3 @@ function navegar(url) {
 function logout() {
     window.location.href = 'index.html';
 }
-
-document.getElementById('cadastroForm')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Veículo cadastrado com sucesso!');
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const supportLink = document.getElementById('support-link');
-    const supportMessage = document.getElementById('support-message');
-    if (supportLink) {
-        supportLink.addEventListener('click', function(event) {
-            event.preventDefault();
-            if (supportMessage.style.display === 'none') {
-                supportMessage.style.display = 'block';
-            } else {
-                supportMessage.style.display = 'none';
-            }
-        });
-    }
-});

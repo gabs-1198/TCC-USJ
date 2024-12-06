@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Anotações - Usuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <h5><a href="{{ url_for('dashboard_user') }}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('visualizar_cadastros') }}">Visualizar Cadastros</a></h5>
+                <h5><a href="{{ url_for('anotacoes_usuario') }}">Anotações</a></h5>
+                <h5><a href="{{ url_for('ver_perfil') }}">Perfil</a></h5>
+                <h5><a href="{{ url_for('logout') }}" style="color: white;">Sair</a></h5>
+            </div>
+            <div class="col-md-10 main-content">
+                <h3>Anotações</h3>
+                <form method="POST" action="{{ url_for('add_anotacao_usuario') }}">
+                    <div class="form-group mb-3">
+                        <label for="placa" class="form-label">Placa do Carro</label>
+                        <select class="form-control" id="placa" name="placa" required>
+                            {% for carro in carros %}
+                                <option value="{{ carro.placa }}">{{ carro.placa }} - {{ carro.modelo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="titulo" class="form-label">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adicionar Anotação</button>
+                </form>
+                <div class="mt-5">
+                    <h4>Anotações Existentes</h4>
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="table-row">Placa</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">Título</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">Data</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">Descrição</div>
+                        </div>
+                    </div>
+                    {% for anotacao in anotacoes %}
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="table-row">{{ anotacao.placa }}</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">{{ anotacao.titulo }}</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">{{ anotacao.data_anotacao }}</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="table-row">
+                                {% if anotacao.descricao|length > 50 %}
+                                    <a href="#" class="descricao-link" data-bs-toggle="modal" data-bs-target="#descricaoModal" data-descricao="{{ anotacao.descricao }}">
+                                        {{ anotacao.descricao[:50] }}...
+                                    </a>
+                                {% else %}
+                                    {{ anotacao.descricao }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para exibir descrição completa -->
+    <div class="modal fade" id="descricaoModal" tabindex="-1" aria-labelledby="descricaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="descricaoModalLabel">Descrição Completa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="descricaoCompleta"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const descricaoLinks = document.querySelectorAll('.descricao-link');
+            const descricaoCompleta = document.getElementById('descricaoCompleta');
+
+            descricaoLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const descricao = this.getAttribute('data-descricao');
+                    descricaoCompleta.textContent = descricao;
+                });
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
