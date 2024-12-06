@@ -19,61 +19,61 @@
         <div class="row">
             <div class="col-md-2 sidebar">
                 <h5><a href="{{ url_for('dashboard') }}">Dashboard</a></h5>
-                <h5><a href="{{ url_for('cadastros') }}">Cadastro</a></h5>
+                <h5><a href="{{ url_for('cadastros') }}">Cadastros</a></h5>
                 <h5><a href="{{ url_for('anotacoes') }}">Anotações</a></h5>
                 <h5><a href="{{ url_for('perfil') }}">Perfil</a></h5>
-                <h5><a href="{{ url_for('login') }}" style="color: white;">Sair</a></h5>
+                <h5><a href="{{ url_for('logout') }}" style="color: white;">Sair</a></h5>
             </div>
 
             <div class="col-md-10 main-content">
-                <div class="form-container">
-                    <h3>Nova Anotação</h3>
-                    <form method="POST" action="{{ url_for('add_anotacao') }}">
-                        <div class="form-group">
-                            <label for="chassi">Chassi</label>
-                            <select class="form-control" id="chassi" name="chassi" required>
-                                {% for carro in carros %}
-                                    <option value="{{ carro.chassi }}">{{ carro.chassi }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="tituloAnotacao">Título</label>
-                            <input type="text" class="form-control" id="tituloAnotacao" name="titulo" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="descricaoAnotacao">Descrição</label>
-                            <textarea class="form-control" id="descricaoAnotacao" name="descricao" rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Salvar Anotação</button>
-                    </form>
-                </div>
+                <h3>Anotações</h3>
+                <form method="POST" action="{{ url_for('add_anotacao') }}">
+                    <div class="form-group">
+                        <label for="placa">Selecione a Placa do Carro</label>
+                        <select class="form-control" id="placa" name="placa" required>
+                            {% for carro in carros %}
+                                <option value="{{ carro.placa }}">{{ carro.placa }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="titulo">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Adicionar Anotação</button>
+                </form>
 
-                <div class="table-container">
-                    <h3>Histórico de Anotações</h3>
+                <div class="table-container mt-5">
                     <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="table-row">Placa</div>
+                        </div>
                         <div class="col-md-3">
                             <div class="table-row">Título</div>
                         </div>
                         <div class="col-md-3">
                             <div class="table-row">Data</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="table-row">Descrição</div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="table-row">Ação</div>
                         </div>
                     </div>
                     {% for anotacao in anotacoes %}
                     <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="table-row">{{ anotacao.placa }}</div>
+                        </div>
                         <div class="col-md-3">
                             <div class="table-row">{{ anotacao.titulo }}</div>
                         </div>
                         <div class="col-md-3">
                             <div class="table-row">{{ anotacao.data_anotacao }}</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="table-row">{{ anotacao.descricao }}</div>
                         </div>
                         <div class="col-md-2">

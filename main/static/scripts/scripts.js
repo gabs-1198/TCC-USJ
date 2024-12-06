@@ -98,6 +98,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const ultimaTrocaPneus = button.getAttribute('data-ultima_troca_pneus');
         const ultimaTrocaOleo = button.getAttribute('data-ultima_troca_oleo');
         const ultimaRevisao = button.getAttribute('data-ultima_revisao');
+        const ultimaTrocaVela = button.getAttribute('data-ultima_troca_vela');
+        const ultimaTrocaCaixaCambio = button.getAttribute('data-ultima_troca_caixa_cambio');
+        const ultimaTrocaSuspensao = button.getAttribute('data-ultima_troca_suspensao');
+        const ultimaTrocaBateria = button.getAttribute('data-ultima_troca_bateria');
+        const validadeBateria = button.getAttribute('data-validade_bateria');
+        const ultimaTrocaCorreiaDentada = button.getAttribute('data-ultima_troca_correia_dentada');
+        const proximaRevisao = button.getAttribute('data-proxima_revisao');
 
         const editChassiInput = document.getElementById('editChassi');
         const editModeloInput = document.getElementById('editModelo');
@@ -106,6 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const editUltimaTrocaPneusInput = document.getElementById('editUltimaTrocaPneus');
         const editUltimaTrocaOleoInput = document.getElementById('editUltimaTrocaOleo');
         const editUltimaRevisaoInput = document.getElementById('editUltimaRevisao');
+        const editUltimaTrocaVelaInput = document.getElementById('editUltimaTrocaVela');
+        const editUltimaTrocaCaixaCambioInput = document.getElementById('editUltimaTrocaCaixaCambio');
+        const editUltimaTrocaSuspensaoInput = document.getElementById('editUltimaTrocaSuspensao');
+        const editUltimaTrocaBateriaInput = document.getElementById('editUltimaTrocaBateria');
+        const editValidadeBateriaInput = document.getElementById('editValidadeBateria');
+        const editUltimaTrocaCorreiaDentadaInput = document.getElementById('editUltimaTrocaCorreiaDentada');
+        const editProximaRevisaoInput = document.getElementById('editProximaRevisao');
 
         editChassiInput.value = chassi;
         editModeloInput.value = modelo;
@@ -114,6 +128,62 @@ document.addEventListener('DOMContentLoaded', function() {
         editUltimaTrocaPneusInput.value = ultimaTrocaPneus;
         editUltimaTrocaOleoInput.value = ultimaTrocaOleo;
         editUltimaRevisaoInput.value = ultimaRevisao;
+        editUltimaTrocaVelaInput.value = ultimaTrocaVela;
+        editUltimaTrocaCaixaCambioInput.value = ultimaTrocaCaixaCambio;
+        editUltimaTrocaSuspensaoInput.value = ultimaTrocaSuspensao;
+        editUltimaTrocaBateriaInput.value = ultimaTrocaBateria;
+        editValidadeBateriaInput.value = validadeBateria;
+        editUltimaTrocaCorreiaDentadaInput.value = ultimaTrocaCorreiaDentada;
+        editProximaRevisaoInput.value = proximaRevisao;
+    });
+
+    const detailsCarModal = document.getElementById('detailsCarModal');
+    detailsCarModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const chassi = button.getAttribute('data-chassi');
+        const modelo = button.getAttribute('data-modelo');
+        const ano = button.getAttribute('data-ano');
+        const placa = button.getAttribute('data-placa');
+        const ultimaTrocaPneus = button.getAttribute('data-ultima_troca_pneus');
+        const ultimaTrocaOleo = button.getAttribute('data-ultima_troca_oleo');
+        const ultimaRevisao = button.getAttribute('data-ultima_revisao');
+        const ultimaTrocaVela = button.getAttribute('data-ultima_troca_vela');
+        const ultimaTrocaCaixaCambio = button.getAttribute('data-ultima_troca_caixa_cambio');
+        const ultimaTrocaSuspensao = button.getAttribute('data-ultima_troca_suspensao');
+        const ultimaTrocaBateria = button.getAttribute('data-ultima_troca_bateria');
+        const validadeBateria = button.getAttribute('data-validade_bateria');
+        const ultimaTrocaCorreiaDentada = button.getAttribute('data-ultima_troca_correia_dentada');
+        const proximaRevisao = button.getAttribute('data-proxima_revisao');
+
+        const detailsChassi = document.getElementById('detailsChassi');
+        const detailsModelo = document.getElementById('detailsModelo');
+        const detailsAno = document.getElementById('detailsAno');
+        const detailsPlaca = document.getElementById('detailsPlaca');
+        const detailsUltimaTrocaPneus = document.getElementById('detailsUltimaTrocaPneus');
+        const detailsUltimaTrocaOleo = document.getElementById('detailsUltimaTrocaOleo');
+        const detailsUltimaRevisao = document.getElementById('detailsUltimaRevisao');
+        const detailsUltimaTrocaVela = document.getElementById('detailsUltimaTrocaVela');
+        const detailsUltimaTrocaCaixaCambio = document.getElementById('detailsUltimaTrocaCaixaCambio');
+        const detailsUltimaTrocaSuspensao = document.getElementById('detailsUltimaTrocaSuspensao');
+        const detailsUltimaTrocaBateria = document.getElementById('detailsUltimaTrocaBateria');
+        const detailsValidadeBateria = document.getElementById('detailsValidadeBateria');
+        const detailsUltimaTrocaCorreiaDentada = document.getElementById('detailsUltimaTrocaCorreiaDentada');
+        const detailsProximaRevisao = document.getElementById('detailsProximaRevisao');
+
+        detailsChassi.textContent = chassi;
+        detailsModelo.textContent = modelo;
+        detailsAno.textContent = ano;
+        detailsPlaca.textContent = placa;
+        detailsUltimaTrocaPneus.textContent = ultimaTrocaPneus;
+        detailsUltimaTrocaOleo.textContent = ultimaTrocaOleo;
+        detailsUltimaRevisao.textContent = ultimaRevisao;
+        detailsUltimaTrocaVela.textContent = ultimaTrocaVela;
+        detailsUltimaTrocaCaixaCambio.textContent = ultimaTrocaCaixaCambio;
+        detailsUltimaTrocaSuspensao.textContent = ultimaTrocaSuspensao;
+        detailsUltimaTrocaBateria.textContent = ultimaTrocaBateria;
+        detailsValidadeBateria.textContent = validadeBateria;
+        detailsUltimaTrocaCorreiaDentada.textContent = ultimaTrocaCorreiaDentada;
+        detailsProximaRevisao.textContent = proximaRevisao;
     });
 });
 

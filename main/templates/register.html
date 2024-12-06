@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro - Movendo</title>
+<link href="static/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Movendo</h1>
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Usuário" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="sobrenome" name="sobrenome" placeholder="Sobrenome" required>
+            </div>
+            <div class="mb-3">
+                <input type="date" class="form-control" id="data_nasc" name="data_nasc" placeholder="Data de Nascimento" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="funcao" name="funcao" placeholder="Função" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Registrar</button>
+        </form>
+        <p class="mt-3">
+            <a href="{{ url_for('login') }}">Já tem uma conta? Faça login</a>
+        </p>
+        <div id="support-message" class="alert alert-info mt-3" style="display: none;">
+            Em caso de problemas, entre em contato com o suporte através do email suporte@movendo.com
+        </div>
+    </div>
+<script src="static/scripts/scripts.js"></script>
+</body>
+</html>

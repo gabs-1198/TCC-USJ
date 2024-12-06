@@ -24,33 +24,33 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         senha = request.form['senha']
 
         cursor = db.cursor(dictionary=True)
-        query = "SELECT * FROM credenciais WHERE email = %s"
-        cursor.execute(query, (email,))
+        query = "SELECT * FROM credenciais WHERE username = %s"
+        cursor.execute(query, (username,))
         user = cursor.fetchone()
 
-        # Verifica se o email existe e se a senha está correta
+        # Verifica se o usuário existe e se a senha está correta
         if user:
             hashed_password = user['senha']
             if check_password_hash(hashed_password, senha):
                 session['loggedin'] = True
-                session['email'] = user['email']
+                session['username'] = user['username']
                 flash('Login bem-sucedido!', 'success')
                 return redirect(url_for('dashboard'))
             else:
                 flash('Senha incorreta!', 'danger')
         else:
-            flash('Email não encontrado!', 'danger')
+            flash('Usuário não encontrado!', 'danger')
     
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         senha = request.form['senha']
         nome = request.form['nome']
         sobrenome = request.form['sobrenome']
@@ -61,17 +61,17 @@ def register():
         credencial_id = str(uuid.uuid4())
 
         cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM credenciais WHERE email = %s", (email,))
+        cursor.execute("SELECT * FROM credenciais WHERE username = %s", (username,))
         account = cursor.fetchone()
 
         if account:
-            flash('E-mail já cadastrado!', 'danger')
+            flash('Usuário já cadastrado!', 'danger')
         else:
             # Criptografar a senha antes de salvar no banco de dados
             hashed_password = generate_password_hash(senha)
             cursor.execute(
-                "INSERT INTO credenciais (email, senha, nome, sobrenome, data_nasc, funcao, idcredenciais) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (email, hashed_password, nome, sobrenome, data_nasc, funcao, credencial_id)
+                "INSERT INTO credenciais (username, senha, nome, sobrenome, data_nasc, funcao, idcredenciais) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (username, hashed_password, nome, sobrenome, data_nasc, funcao, credencial_id)
             )
             db.commit()
             flash('Cadastro realizado com sucesso!', 'success')
@@ -256,14 +256,14 @@ def anotacoes():
         carros = cursor.fetchall()
 
         if request.method == 'POST':
-            chassi = request.form['chassi']
+            placa = request.form['placa']
             titulo = request.form['titulo']
             descricao = request.form['descricao']
             data_anotacao = datetime.date.today()
 
             cursor.execute(
-                "INSERT INTO anotacoes (chassi, titulo, descricao, data_anotacao) VALUES (%s, %s, %s, %s)",
-                (chassi, titulo, descricao, data_anotacao)
+                "INSERT INTO anotacoes (placa, titulo, descricao, data_anotacao) VALUES (%s, %s, %s, %s)",
+                (placa, titulo, descricao, data_anotacao)
             )
             db.commit()
             flash('Anotação salva com sucesso!', 'success')
@@ -280,15 +280,15 @@ def anotacoes():
 @app.route('/add_anotacao', methods=['POST'])
 def add_anotacao():
     if 'loggedin' in session:
-        chassi = request.form['chassi']
+        placa = request.form['placa']
         titulo = request.form['titulo']
         descricao = request.form['descricao']
         data_anotacao = datetime.date.today()
 
         cursor = db.cursor()
         cursor.execute(
-            "INSERT INTO anotacoes (chassi, titulo, descricao, data_anotacao) VALUES (%s, %s, %s, %s)",
-            (chassi, titulo, descricao, data_anotacao)
+            "INSERT INTO anotacoes (placa, titulo, descricao, data_anotacao) VALUES (%s, %s, %s, %s)",
+            (placa, titulo, descricao, data_anotacao)
         )
         db.commit()
         flash('Anotação salva com sucesso!', 'success')
@@ -353,7 +353,7 @@ def delete_anotacao(id):
 @app.route('/logout')
 def logout():
     session.pop('loggedin', None)
-    session.pop('email', None)
+    session.pop('username', None)
     flash('Logout realizado com sucesso!', 'success')
     return redirect(url_for('login'))
 

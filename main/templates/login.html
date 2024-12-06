@@ -11,13 +11,12 @@
         <h1>Movendo</h1>
         <form method="POST" action="{{ url_for('login') }}">
             <div class="mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Usuário" required>
             </div>
             
             <div class="mb-3">
-                <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
+                <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required>
             </div>
-            <!-- Ir p pag de perfil --> 
             <button type="submit" class="btn btn-primary w-100">Entrar</button>
         </form>
         <p class="mt-3">
