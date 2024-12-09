@@ -65,7 +65,7 @@ def login():
             if user['is_admin']:
                 return redirect(url_for('admin_dashboard'))
             else:
-                return redirect(url_for('cliente_dashboard'))
+                return redirect(url_for('dashboard_user'))
         else:
             flash('Usuário ou senha incorretos!', 'danger')
     
@@ -109,25 +109,22 @@ def register():
         cursor.execute(SELECT_ALL_EMPRESAS)
     finally:
         cursor.close()
-@app.route('/dashboard_admin')
-def dashboard_admin():
-    if 'loggedin' in session:
-        cursor = db.cursor(dictionary=True)
-        try:
-            cursor.execute("""
-                SELECT carros.*, empresas.nome AS empresa_nome 
-                FROM carros 
-                JOIN empresas ON carros.empresa_id = empresas.id
-            """)
-            carros = cursor.fetchall()
-            cursor.execute(SELECT_ALL_EMPRESAS)
-            empresas = cursor.fetchall()
-            return render_template('dashboard_admin.html', carros=carros, empresas=empresas)
-        finally:
-            cursor.close()
-    else:    
-        flash(LOGIN_REQUIRED_MESSAGE, 'danger')
-        return redirect(url_for('login'))
+@app.route('/admin_dashboard')
+@admin_required
+def admin_dashboard():
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT carros.*, empresas.nome AS empresa_nome 
+            FROM carros 
+            JOIN empresas ON carros.empresa_id = empresas.id
+        """)
+        carros = cursor.fetchall()
+        cursor.execute(SELECT_ALL_EMPRESAS)
+        empresas = cursor.fetchall()
+        return render_template('dashboard_admin.html', carros=carros, empresas=empresas)
+    finally:
+        cursor.close()
 
 @app.route('/dashboard_user')
 def dashboard_user():
@@ -136,6 +133,11 @@ def dashboard_user():
     else:
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
+
+@app.route('/cliente_dashboard')
+@cliente_required
+def cliente_dashboard():
+    return render_template('dashboard_user.html')
 
 @app.route('/edit_car', methods=['POST'])
 def edit_car():
@@ -182,35 +184,6 @@ def edit_car():
         cursor.close()
 
     return redirect(url_for('cadastros_admin'))
-
-@app.route('/carros_por_empresa', methods=['GET', 'POST'])
-def carros_por_empresa():
-    if 'loggedin' in session:
-        cursor = db.cursor(dictionary=True)
-        try:
-            cursor.execute(SELECT_ALL_EMPRESAS)
-            empresas = cursor.fetchall()
-
-            carros = []
-            if request.method == 'POST':
-                empresa_id = request.form['empresa_id']
-                cursor.execute("""
-                    SELECT chassi, modelo, ano, placa, ultima_revisao, 
-                           DATE_ADD(ultima_revisao, INTERVAL 6 MONTH) AS proxima_revisao,
-                           ultima_troca_pneus, ultima_troca_oleo, ultima_troca_vela, 
-                           ultima_troca_caixa_cambio, ultima_troca_suspensao, 
-                           ultima_troca_bateria, validade_bateria, ultima_troca_correia_dentada, scanner_instalado
-                    FROM carros 
-                    WHERE empresa_id = %s
-                """, (empresa_id,))
-                carros = cursor.fetchall()
-
-            return render_template('cadastros_admin.html', empresas=empresas, carros=carros)
-        finally:
-            cursor.close()
-    else:
-        flash(LOGIN_REQUIRED_MESSAGE, 'danger')
-        return redirect(url_for('login'))
 
 # Função para cadastrar um novo carro
 @app.route('/add_car', methods=['POST'])
@@ -265,10 +238,6 @@ def add_car():
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
     
-@app.route('/grafico_carros', methods=['GET'])
-def grafico_carros():
-    return render_template('grafico_carros.html')
-
 @app.route('/data', methods=['GET'])
 def get_data():
     year = request.args.get('year', type=int)
@@ -344,7 +313,7 @@ def add_anotacao():
             cursor.close()
         db.commit()
         flash(ANNOTATION_SAVED_SUCCESS_MESSAGE, 'success')
-        return redirect(url_for('anotacoes_admin'))
+        return render_template('anotacoes_admin.html', carros=carros, anotacoes=anotacoes)
     else:
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
@@ -502,64 +471,6 @@ def solicitar_modificacao():
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
 
-@app.route('/admin_dashboard')
-@admin_required
-def admin_dashboard():
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT carros.*, empresas.nome AS empresa_nome 
-        FROM carros 
-        JOIN empresas ON carros.empresa_id = empresas.id
-    """)
-    carros = cursor.fetchall()
-    cursor.execute(SELECT_ALL_EMPRESAS)
-    empresas = cursor.fetchall()
-    return render_template('dashboard_admin.html', carros=carros, empresas=empresas)
-
-@app.route('/cliente_dashboard')
-@cliente_required
-def cliente_dashboard():
-    return render_template('dashboard_user.html')
-
-@app.route('/logout')
-def logout():
-    session.pop('loggedin', None)
-    session.pop('username', None)
-    flash('Logout realizado com sucesso!', 'success')
-    return redirect(url_for('login'))
-
-@app.route('/data_usuario', methods=['GET'])
-def get_data_usuario():
-    if 'loggedin' in session:
-        year = request.args.get('year', type=int)
-        cursor = db.cursor(dictionary=True)
-        try:
-            cursor.execute("SELECT empresa_id FROM credenciais WHERE username = %s", (session['username'],))
-            user = cursor.fetchone()
-            empresa_id = user['empresa_id']
-
-            query = """
-                SELECT 
-                    MONTH(data_cadastro) AS month, 
-                    COUNT(*) AS count 
-                FROM carros 
-                WHERE YEAR(data_cadastro) = %s AND empresa_id = %s
-                GROUP BY MONTH(data_cadastro)
-                ORDER BY MONTH(data_cadastro)
-            """
-            cursor.execute(query, (year, empresa_id))
-            data = cursor.fetchall()
-        except Exception as e:
-            flash(f'Ocorreu um erro ao buscar os dados: {e}', 'danger')
-            data = []
-        finally:
-            cursor.close()
-        
-        return jsonify(data)
-    else:
-        flash('Por favor, faça login para continuar.', 'danger')
-        return redirect(url_for('login'))
-
 @app.route('/cadastros_admin', methods=['GET', 'POST'])
 @admin_required
 def cadastros_admin():
@@ -603,6 +514,13 @@ def available_years():
         cursor.close()
     
     return jsonify(years)
+
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('username', None)
+    flash('Logout realizado com sucesso!', 'success')
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
