@@ -386,23 +386,47 @@ def criar_perfil():
                 )
                 db.commit()
                 flash('Perfil da empresa criado com sucesso!', 'success')
-                return redirect(url_for('admin_dashboard'))
+                return redirect(url_for('criar_perfil'))
             finally:
                 cursor.close()
 
-        return render_template('criar_perfil.html')
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM empresas")
+        empresas = cursor.fetchall()
+        cursor.close()
+
+        return render_template('criar_perfil.html', empresas=empresas)
     else:
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
 
-@app.route('/delete_anotacao/<int:id>', methods=['POST'])
-def delete_anotacao(id):
+@app.route('/editar_empresa', methods=['POST'])
+@admin_required
+def editar_empresa():
     if 'loggedin' in session:
+        empresa_id = request.form['id']
+        nome = request.form['nome']
+        responsavel = request.form['responsavel']
+        estado = request.form['estado']
+        cnpj = request.form['cnpj']
+        telefone = request.form['telefone']
+
         cursor = db.cursor()
-        cursor.execute("DELETE FROM anotacoes WHERE id = %s", (id,))
-        db.commit()
-        flash('Anotação excluída com sucesso!', 'success')
-        return redirect(url_for('anotacoes_admin'))
+        try:
+            cursor.execute("""
+                UPDATE empresas 
+                SET nome = %s, responsavel = %s, estado = %s, cnpj = %s, telefone = %s 
+                WHERE id = %s
+            """, (nome, responsavel, estado, cnpj, telefone, empresa_id))
+            db.commit()
+            flash('Empresa atualizada com sucesso!', 'success')
+        except Exception as e:
+            db.rollback()
+            flash(f'Ocorreu um erro ao atualizar a empresa: {e}', 'danger')
+        finally:
+            cursor.close()
+
+        return redirect(url_for('criar_perfil'))
     else:
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
@@ -423,30 +447,34 @@ def ver_perfil():
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
 
-@app.route('/visualizar_cadastros', methods=['GET', 'POST'])
+@app.route('/visualizar_cadastros', methods=['GET'])
+@cliente_required
 def visualizar_cadastros():
     if 'loggedin' in session:
         cursor = db.cursor(dictionary=True)
-        cursor.execute(SELECT_ALL_EMPRESAS)
-        empresas = cursor.fetchall()
+        try:
+            # Obter a empresa do usuário logado
+            cursor.execute("SELECT empresa_id FROM credenciais WHERE username = %s", (session['username'],))
+            user = cursor.fetchone()
+            empresa_id = user['empresa_id']
 
-        carros = []
-        if request.method == 'POST':
-            empresa_id = request.form['empresa_id']
+            # Obter os carros da empresa do usuário logado
             cursor.execute("""
                 SELECT chassi, modelo, ano, placa, ultima_revisao, 
                        DATE_ADD(ultima_revisao, INTERVAL 6 MONTH) AS proxima_revisao,
                        ultima_troca_pneus, ultima_troca_oleo, ultima_troca_vela, 
                        ultima_troca_caixa_cambio, ultima_troca_suspensao, 
-                       ultima_troca_bateria, validade_bateria, ultima_troca_correia_dentada
+                       ultima_troca_bateria, validade_bateria, ultima_troca_correia_dentada, scanner_instalado
                 FROM carros 
                 WHERE empresa_id = %s
             """, (empresa_id,))
             carros = cursor.fetchall()
 
-        return render_template('visualizar_cadastros.html', empresas=empresas, carros=carros)
+            return render_template('visualizar_cadastros.html', carros=carros)
+        finally:
+            cursor.close()
     else:
-        flash(LOGIN_REQUIRED_MESSAGE, 'danger')
+        flash('Você precisa fazer login primeiro.', 'danger')
         return redirect(url_for('login'))
 
 @app.route('/solicitar_modificacao', methods=['POST'])

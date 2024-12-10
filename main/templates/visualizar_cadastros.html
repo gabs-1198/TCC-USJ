@@ -27,21 +27,10 @@
 
             <div class="col-md-10 main-content">
                 <h3>Visualizar Carros por Empresa</h3>
-                <form method="POST" action="{{ url_for('visualizar_cadastros') }}">
-                    <div class="form-group">
-                        <label for="empresa_id">Selecione a Empresa</label>
-                        <select class="form-control" id="empresa_id" name="empresa_id" required>
-                            {% for empresa in empresas %}
-                                <option value="{{ empresa.id }}">{{ empresa.nome }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Buscar</button>
-                </form>
 
                 {% if carros %}
                 <div class="table-container mt-5">
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Placa</th>

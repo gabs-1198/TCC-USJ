@@ -3,7 +3,7 @@ body {
     background-color: black;
     color: #fff;
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     margin: 0;
     padding: 0;
 }
@@ -17,7 +17,7 @@ body {
     color: #fff;
     min-height: 100vh;
     padding-top: 20px;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #444;
 }
 
 .sidebar h5 {
@@ -50,10 +50,10 @@ body {
 }
 
 .table-row {
-    background-color: #fff;
-    color: #333; /* Adicionado para garantir que o texto seja legível */
+    background-color: #222;
+    color: #fff;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
 }
 
 .logo {
@@ -66,26 +66,28 @@ body {
 }
 
 .modal-content {
-    background-color: #fff;
-    color: #333;
+    background-color: #222;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .modal-header {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #444;
 }
 
 .modal-title {
-    color: #333;
+    color: #fff;
 }
 
 .form-label {
-    color: #333;
+    color: #fff;
 }
 
 .form-control {
-    color: #333;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    color: #fff;
+    background-color: #333;
+    border: 1px solid #444;
     padding: 10px;
     border-radius: 4px;
 }
@@ -102,9 +104,10 @@ input {
     margin: 10px 0;
     padding: 10px;
     width: 100%;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     border-radius: 4px;
-    color: #333; /* Adicionado para garantir que o texto seja legível */
+    color: #fff;
+    background-color: #333;
 }
 
 button {
@@ -122,13 +125,14 @@ button:hover {
 }
 
 .form-container {
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: #222;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    color: #333; /* Adicionado para garantir que o texto seja legível */
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #fff;
 }
 
 .form-group {
@@ -150,7 +154,7 @@ button:hover {
 
 .table-container .table-row {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #444;
 }
 
 .table-container .row {
@@ -172,21 +176,21 @@ button:hover {
 }
 
 .table-container .table {
-    color: #333;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    color: #fff;
+    background-color: #222;
+    border: 1px solid #444;
     border-radius: 4px;
 }
 
 .table-container .table th {
-    color: #333;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ddd;
+    color: #fff;
+    background-color: #333;
+    border-bottom: 1px solid #444;
     padding: 10px;
 }
 
 .table-container .table td {
-    color: #333;
+    color: #fff;
     padding: 10px;
 }
 
@@ -225,6 +229,12 @@ h1 {
     text-align: center;
 }
 
+h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 p {
     margin-top: 20px;
     text-align: center;
@@ -242,4 +252,30 @@ a:hover {
 #support-message {
     margin-top: 20px;
     display: none;
+}
+
+.list-group-item {
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item strong {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.list-group-item div {
+    font-size: 16px;
+    color: #ccc;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px;
 }

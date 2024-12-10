@@ -233,6 +233,33 @@ if (solicitarModificacaoModal) {
     });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const editEmpresaModal = document.getElementById('editEmpresaModal');
+    editEmpresaModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const nome = button.getAttribute('data-nome');
+        const responsavel = button.getAttribute('data-responsavel');
+        const estado = button.getAttribute('data-estado');
+        const cnpj = button.getAttribute('data-cnpj');
+        const telefone = button.getAttribute('data-telefone');
+
+        const editEmpresaId = document.getElementById('editEmpresaId');
+        const editNomeEmpresa = document.getElementById('editNomeEmpresa');
+        const editResponsavel = document.getElementById('editResponsavel');
+        const editEstado = document.getElementById('editEstado');
+        const editCnpj = document.getElementById('editCnpj');
+        const editTelefone = document.getElementById('editTelefone');
+
+        editEmpresaId.value = id;
+        editNomeEmpresa.value = nome;
+        editResponsavel.value = responsavel;
+        editEstado.value = estado;
+        editCnpj.value = cnpj;
+        editTelefone.value = telefone;
+    });
+});
+
 function navegar(url) {
     window.location.href = url;
 }
