@@ -10,18 +10,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-2 sidebar">
-                <h5><a href="{{ url_for('dashboard_user') }}">Dashboard</a></h5>
-                <h5><a href="{{ url_for('visualizar_cadastros') }}">Visualizar Cadastros</a></h5>
-                <h5><a href="{{ url_for('anotacoes_usuario') }}">Anotações</a></h5>
-                <h5><a href="{{ url_for('ver_perfil') }}">Perfil</a></h5>
+                <h5><a href="{{ url_for('dashboard_user') }}" class="{% if request.endpoint == 'dashboard_user' %}active{% endif %}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('visualizar_cadastros') }}" class="{% if request.endpoint == 'visualizar_cadastros' %}active{% endif %}">Cadastros</a></h5>
+                <h5><a href="{{ url_for('anotacoes_usuario') }}" class="{% if request.endpoint == 'anotacoes_usuario' %}active{% endif %}">Anotações</a></h5>
+                <h5><a href="{{ url_for('ver_perfil') }}" class="{% if request.endpoint == 'ver_perfil' %}active{% endif %}">Perfil</a></h5>
                 <h5><a href="{{ url_for('logout') }}" class="logout-link">Sair</a></h5>
             </div>
             
@@ -35,8 +29,74 @@
                         </div>
                         <div class="chart-container mb-4">
                             <canvas id="lineChart"></canvas>
-                        </div>               
+                        </div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#solicitarCadastroModal">
+                            Solicitar Cadastro de Novo Carro
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#solicitarEdicaoModal">
+                            Solicitar Edição de Veículo
+                        </button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Solicitar Cadastro de Novo Carro -->
+    <div class="modal fade" id="solicitarCadastroModal" tabindex="-1" aria-labelledby="solicitarCadastroModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="solicitarCadastroModalLabel">Solicitar Cadastro de Novo Carro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Quando preencher todo o formulário, envie-o para o email suporte@movendo.com.br
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ url_for('static', filename='anexos/formulario Movendo - carros novos.xlsx') }}" class="btn btn-primary" download>Download</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Solicitar Edição de Veículo -->
+    <div class="modal fade" id="solicitarEdicaoModal" tabindex="-1" aria-labelledby="solicitarEdicaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="solicitarEdicaoModalLabel">Solicitar Edição de Veículo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="solicitarEdicaoForm" method="POST" action="{{ url_for('solicitar_modificacao') }}">
+                        <div class="mb-3">
+                            <label for="veiculo" class="form-label">Selecione o Veículo</label>
+                            <select class="form-select" id="veiculo" name="veiculo" required>
+                                {% for carro in carros %}
+                                    <option value="{{ carro['placa'] }}">{{ carro['modelo'] }} - {{ carro['placa'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="peca" class="form-label">Selecione a Peça</label>
+                            <select class="form-select" id="peca" name="peca" required>
+                                <option value="ultima_troca_pneus">Última Troca de Pneus</option>
+                                <option value="ultima_troca_oleo">Última Troca de Óleo</option>
+                                <option value="ultima_troca_vela">Última Troca de Vela</option>
+                                <option value="ultima_troca_caixa_cambio">Última Troca da Caixa de Câmbio</option>
+                                <option value="ultima_troca_suspensao">Última Troca da Suspensão</option>
+                                <option value="ultima_troca_bateria">Última Troca da Bateria</option>
+                                <option value="ultima_troca_correia_dentada">Última Troca da Correia Dentada</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="data_mudanca" class="form-label">Data da Última Mudança</label>
+                            <input type="date" class="form-control" id="data_mudanca" name="data_mudanca" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar Solicitação</button>
+                    </form>
                 </div>
             </div>
         </div>

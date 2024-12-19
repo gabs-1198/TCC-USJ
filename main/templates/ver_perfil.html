@@ -9,19 +9,12 @@
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
-            </div>
-        </div>
-
-        <div class="row">
+    <div class="row">
             <div class="col-md-2 sidebar">
-                <h5><a href="{{ url_for('cliente_dashboard') }}">Dashboard</a></h5>
-                <h5><a href="{{ url_for('visualizar_cadastros') }}">Visualizar Cadastros</a></h5>
-                <h5><a href="{{ url_for('anotacoes_usuario') }}">Anotações</a></h5>
-                <h5><a href="{{ url_for('ver_perfil') }}">Perfil</a></h5>
+                <h5><a href="{{ url_for('dashboard_user') }}" class="{% if request.endpoint == 'dashboard_user' %}active{% endif %}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('visualizar_cadastros') }}" class="{% if request.endpoint == 'visualizar_cadastros' %}active{% endif %}">Cadastros</a></h5>
+                <h5><a href="{{ url_for('anotacoes_usuario') }}" class="{% if request.endpoint == 'anotacoes_usuario' %}active{% endif %}">Anotações</a></h5>
+                <h5><a href="{{ url_for('ver_perfil') }}" class="{% if request.endpoint == 'ver_perfil' %}active{% endif %}">Perfil</a></h5>
                 <h5><a href="{{ url_for('logout') }}" style="color: white;">Sair</a></h5>
             </div>
 
@@ -51,11 +44,6 @@
                     <div class="form-group">
                         <label for="telefone">Telefone</label>
                         <input type="text" class="form-control" id="telefone" name="telefone" value="{{ empresa.telefone }}" readonly>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="username">Usuário</label>
-                        <input type="text" class="form-control" id="username" name="username" value="{{ empresa.username }}" readonly>
                     </div>
                 </div>
             </div>

@@ -61,7 +61,6 @@ def login():
             session['loggedin'] = True
             session['username'] = user['username']
             session['is_admin'] = user['is_admin']
-            flash('Login bem-sucedido!', 'success')
             if user['is_admin']:
                 return redirect(url_for('admin_dashboard'))
             else:
@@ -129,7 +128,15 @@ def admin_dashboard():
 @app.route('/dashboard_user')
 def dashboard_user():
     if 'loggedin' in session:
-        return render_template('dashboard_user.html')
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT empresa_id FROM credenciais WHERE username = %s", (session['username'],))
+        user = cursor.fetchone()
+        empresa_id = user['empresa_id']
+
+        cursor.execute("SELECT * FROM carros WHERE empresa_id = %s", (empresa_id,))
+        carros = cursor.fetchall()
+
+        return render_template('dashboard_user.html', carros=carros)
     else:
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
@@ -140,50 +147,39 @@ def cliente_dashboard():
     return render_template('dashboard_user.html')
 
 @app.route('/edit_car', methods=['POST'])
+@admin_required
 def edit_car():
-    if 'loggedin' not in session:
-        flash(LOGIN_REQUIRED_MESSAGE, 'danger')
-        return redirect(url_for('login'))
-
-    try:
+    if 'loggedin' in session:
+        car_id = request.form['id']
+        placa = request.form['placa']
         chassi = request.form['chassi']
         modelo = request.form['modelo']
         ano = request.form['ano']
-        placa = request.form['placa']
-        ultima_troca_pneus = request.form['ultima_troca_pneus']
-        ultima_troca_oleo = request.form['ultima_troca_oleo']
         ultima_revisao = request.form['ultima_revisao']
-        ultima_troca_vela = request.form['ultima_troca_vela']
-        ultima_troca_caixa_cambio = request.form['ultima_troca_caixa_cambio']
-        ultima_troca_suspensao = request.form['ultima_troca_suspensao']
-        ultima_troca_bateria = request.form['ultima_troca_bateria']
-        validade_bateria = request.form['validade_bateria']
-        ultima_troca_correia_dentada = request.form['ultima_troca_correia_dentada']
-        proxima_revisao = (datetime.datetime.strptime(ultima_revisao, '%Y-%m-%d') + datetime.timedelta(days=180)).date()
-        scanner_instalado = request.form['scanner_instalado']
+        proxima_revisao = request.form['proxima_revisao']
+        peca_especifica = request.form['peca_especifica']
+        data_instalacao = request.form['data_instalacao']
+        data_manutencao = request.form['data_manutencao']
 
         cursor = db.cursor()
-        query = """
-            UPDATE carros 
-            SET modelo = %s, ano = %s, placa = %s, ultima_troca_pneus = %s, ultima_troca_oleo = %s, ultima_revisao = %s,
-                ultima_troca_vela = %s, ultima_troca_caixa_cambio = %s, ultima_troca_suspensao = %s, 
-                ultima_troca_bateria = %s, validade_bateria = %s, ultima_troca_correia_dentada = %s, proxima_revisao = %s,
-                scanner_instalado = %s
-            WHERE chassi = %s
-        """
-        cursor.execute(query, (modelo, ano, placa, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, 
-                               ultima_troca_vela, ultima_troca_caixa_cambio, ultima_troca_suspensao, 
-                               ultima_troca_bateria, validade_bateria, ultima_troca_correia_dentada, proxima_revisao,
-                               scanner_instalado, chassi))
-        db.commit()
-        flash('Informações do carro atualizadas com sucesso!', 'success')
-    except Exception as e:
-        db.rollback()
-        flash(f'Ocorreu um erro ao atualizar as informações do carro: {e}', 'danger')
-    finally:
-        cursor.close()
+        try:
+            cursor.execute("""
+                UPDATE carros 
+                SET placa = %s, chassi = %s, modelo = %s, ano = %s, ultima_revisao = %s, proxima_revisao = %s, peca_especifica = %s, data_instalacao = %s, data_manutencao = %s
+                WHERE id = %s
+            """, (placa, chassi, modelo, ano, ultima_revisao, proxima_revisao, peca_especifica, data_instalacao, data_manutencao, car_id))
+            db.commit()
+            flash('Carro atualizado com sucesso!', 'success')
+        except Exception as e:
+            db.rollback()
+            flash(f'Ocorreu um erro ao atualizar o carro: {e}', 'danger')
+        finally:
+            cursor.close()
 
-    return redirect(url_for('cadastros_admin'))
+        return redirect(url_for('cadastros_admin'))
+    else:
+        flash(LOGIN_REQUIRED_MESSAGE, 'danger')
+        return redirect(url_for('login'))
 
 # Função para cadastrar um novo carro
 @app.route('/add_car', methods=['POST'])
@@ -301,6 +297,7 @@ def add_anotacao():
         titulo = request.form['titulo']
         descricao = request.form['descricao']
         data_anotacao = request.form['data_anotacao']
+
         cursor = db.cursor()
         try:
             cursor.execute(
@@ -309,11 +306,13 @@ def add_anotacao():
             )
             db.commit()
             flash(ANNOTATION_SAVED_SUCCESS_MESSAGE, 'success')
+        except Exception as e:
+            db.rollback()
+            flash(f'Ocorreu um erro ao adicionar a anotação: {e}', 'danger')
         finally:
             cursor.close()
-        db.commit()
-        flash(ANNOTATION_SAVED_SUCCESS_MESSAGE, 'success')
-        return render_template('anotacoes_admin.html', carros=carros, anotacoes=anotacoes)
+
+        return redirect(url_for('anotacoes_admin'))
     else:
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
@@ -321,7 +320,7 @@ def add_anotacao():
 @app.route('/anotacoes_usuario')
 def anotacoes_usuario():
     if 'loggedin' in session:
-        cursor = db.cursor(dictionary=True)
+        cursor = db.cursor(dictionary=True)  # Certifique-se de que o cursor retorna dicionários
         cursor.execute("SELECT empresa_id FROM credenciais WHERE username = %s", (session['username'],))
         user = cursor.fetchone()
         empresa_id = user['empresa_id']
@@ -343,9 +342,9 @@ def add_anotacao_usuario():
         placa = request.form['placa']
         titulo = request.form['titulo']
         descricao = request.form['descricao']
-        data_anotacao = datetime.date.today()
+        data_anotacao = request.form['data_anotacao']
 
-        cursor = db.cursor()
+        cursor = db.cursor(dictionary=True)  # Certifique-se de que o cursor retorna dicionários
         cursor.execute("SELECT empresa_id FROM carros WHERE placa = %s", (placa,))
         carro = cursor.fetchone()
 
@@ -480,25 +479,28 @@ def visualizar_cadastros():
 @app.route('/solicitar_modificacao', methods=['POST'])
 def solicitar_modificacao():
     if 'loggedin' in session:
-        chassi = request.form['chassi']
-        campo = request.form['campo']
-        novo_valor = request.form['novo_valor']
+        placa = request.form['veiculo']  # Certifique-se de que o nome do campo corresponde ao formulário HTML
+        peca = request.form['peca']
+        data_mudanca = request.form['data_mudanca']
 
         cursor = db.cursor()
         try:
             cursor.execute(
-                "INSERT INTO solicitacoes_modificacao (chassi, campo, novo_valor, data_solicitacao) VALUES (%s, %s, %s, %s)",
-                (chassi, campo, novo_valor, datetime.datetime.now())
+                "INSERT INTO solicitacoes_modificacao (placa, campo, novo_valor, data_solicitacao) VALUES (%s, %s, %s, %s)",
+                (placa, peca, data_mudanca, datetime.datetime.now())
             )
             db.commit()
             flash('Solicitação de modificação enviada com sucesso!', 'success')
+        except Exception as e:
+            db.rollback()
+            flash(f'Ocorreu um erro ao enviar a solicitação de modificação: {e}', 'danger')
         finally:
             cursor.close()
-        return redirect(url_for('visualizar_cadastros'))
+        return redirect(url_for('dashboard_user'))
     else:
         flash(LOGIN_REQUIRED_MESSAGE, 'danger')
         return redirect(url_for('login'))
-
+    
 @app.route('/cadastros_admin', methods=['GET', 'POST'])
 @admin_required
 def cadastros_admin():

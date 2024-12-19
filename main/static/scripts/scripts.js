@@ -95,67 +95,64 @@ window.onload = function() {
                             y: {
                                 beginAtZero: true
                             }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'white' // Cor das labels da legenda
+                                }
+                            }
                         }
                     }
                 });
+
+                // Definir o fundo do gráfico como preto com opacidade de 75%
+                ctx.canvas.parentNode.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
             })
             .catch(error => console.error('Erro ao buscar dados:', error)); // Adicione este log para verificar erros
     }
 };
 
-const editCarModal = document.getElementById('editCarModal');
-if (editCarModal) {
+document.addEventListener('DOMContentLoaded', function() {
+    const editCarModal = document.getElementById('editCarModal');
     editCarModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const placa = button.getAttribute('data-placa');
         const chassi = button.getAttribute('data-chassi');
         const modelo = button.getAttribute('data-modelo');
         const ano = button.getAttribute('data-ano');
-        const placa = button.getAttribute('data-placa');
-        const ultimaTrocaPneus = button.getAttribute('data-ultima_troca_pneus');
-        const ultimaTrocaOleo = button.getAttribute('data-ultima_troca_oleo');
         const ultimaRevisao = button.getAttribute('data-ultima_revisao');
-        const ultimaTrocaVela = button.getAttribute('data-ultima_troca_vela');
-        const ultimaTrocaCaixaCambio = button.getAttribute('data-ultima_troca_caixa_cambio');
-        const ultimaTrocaSuspensao = button.getAttribute('data-ultima_troca_suspensao');
-        const ultimaTrocaBateria = button.getAttribute('data-ultima_troca_bateria');
-        const validadeBateria = button.getAttribute('data-validade_bateria');
-        const ultimaTrocaCorreiaDentada = button.getAttribute('data-ultima_troca_correia_dentada');
         const proximaRevisao = button.getAttribute('data-proxima_revisao');
-        const scannerInstalado = button.getAttribute('data-scanner_instalado');
 
-        const editChassiInput = document.getElementById('editChassi');
-        const editModeloInput = document.getElementById('editModelo');
-        const editAnoInput = document.getElementById('editAno');
-        const editPlacaInput = document.getElementById('editPlaca');
-        const editUltimaTrocaPneusInput = document.getElementById('editUltimaTrocaPneus');
-        const editUltimaTrocaOleoInput = document.getElementById('editUltimaTrocaOleo');
-        const editUltimaRevisaoInput = document.getElementById('editUltimaRevisao');
-        const editUltimaTrocaVelaInput = document.getElementById('editUltimaTrocaVela');
-        const editUltimaTrocaCaixaCambioInput = document.getElementById('editUltimaTrocaCaixaCambio');
-        const editUltimaTrocaSuspensaoInput = document.getElementById('editUltimaTrocaSuspensao');
-        const editUltimaTrocaBateriaInput = document.getElementById('editUltimaTrocaBateria');
-        const editValidadeBateriaInput = document.getElementById('editValidadeBateria');
-        const editUltimaTrocaCorreiaDentadaInput = document.getElementById('editUltimaTrocaCorreiaDentada');
-        const editProximaRevisaoInput = document.getElementById('editProximaRevisao');
-        const editScannerInstaladoInput = document.getElementById('editScannerInstalado');
+        const editCarId = document.getElementById('editCarId');
+        const editPlaca = document.getElementById('editPlaca');
+        const editChassi = document.getElementById('editChassi');
+        const editModelo = document.getElementById('editModelo');
+        const editAno = document.getElementById('editAno');
+        const editUltimaRevisao = document.getElementById('editUltimaRevisao');
+        const editProximaRevisao = document.getElementById('editProximaRevisao');
 
-        editChassiInput.value = chassi;
-        editModeloInput.value = modelo;
-        editAnoInput.value = ano;
-        editPlacaInput.value = placa;
-        editUltimaTrocaPneusInput.value = ultimaTrocaPneus;
-        editUltimaTrocaOleoInput.value = ultimaTrocaOleo;
-        editUltimaRevisaoInput.value = ultimaRevisao;
-        editUltimaTrocaVelaInput.value = ultimaTrocaVela;
-        editUltimaTrocaCaixaCambioInput.value = ultimaTrocaCaixaCambio;
-        editUltimaTrocaSuspensaoInput.value = ultimaTrocaSuspensao;
-        editUltimaTrocaBateriaInput.value = ultimaTrocaBateria;
-        editValidadeBateriaInput.value = validadeBateria;
-        editUltimaTrocaCorreiaDentadaInput.value = ultimaTrocaCorreiaDentada;
-        editProximaRevisaoInput.value = proximaRevisao;
-        editScannerInstaladoInput.value = scannerInstalado;
+        editCarId.value = id;
+        editPlaca.value = placa;
+        editChassi.value = chassi;
+        editModelo.value = modelo;
+        editAno.value = ano;
+        editUltimaRevisao.value = ultimaRevisao;
+        editProximaRevisao.value = proximaRevisao;
     });
-}
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const supportLink = document.getElementById('support-link');
+    const supportMessage = document.getElementById('support-message');
+    if (supportLink && supportMessage) {
+        supportLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            supportMessage.style.display = 'block';
+        });
+    }
+});
 
 const detailsCarModal = document.getElementById('detailsCarModal');
 if (detailsCarModal) {

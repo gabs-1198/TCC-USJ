@@ -9,19 +9,14 @@
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
-            </div>
-        </div>
+     
 
         <div class="row">
             <div class="col-md-2 sidebar">
-                <h5><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></h5>
-                <h5><a href="{{ url_for('cadastros_admin') }}">Cadastros</a></h5>
-                <h5><a href="{{ url_for('anotacoes_admin') }}">Anotações</a></h5>
-                <h5><a href="{{ url_for('criar_perfil') }}">Criar Perfil</a></h5>
+                 <h5><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('cadastros_admin') }}" class="{% if request.endpoint == 'cadastros_admin' %}active{% endif %}">Cadastros</a></h5>
+                <h5><a href="{{ url_for('anotacoes_admin') }}" class="{% if request.endpoint == 'anotacoes_admin' %}active{% endif %}">Anotações</a></h5>
+                <h5><a href="{{ url_for('criar_perfil') }}" class="{% if request.endpoint == 'criar_perfil' %}active{% endif %}">Criar Perfil</a></h5>
                 <h5><a href="{{ url_for('logout') }}" style="color: white;">Sair</a></h5>
             </div>
 

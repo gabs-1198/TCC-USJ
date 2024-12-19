@@ -8,18 +8,13 @@
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="logo my-3">
-            </div>
-        </div>
+     
         <div class="row">
             <div class="col-md-2 sidebar">
-                <h5><a href="{{ url_for('dashboard_user') }}">Dashboard</a></h5>
-                <h5><a href="{{ url_for('visualizar_cadastros') }}">Visualizar Cadastros</a></h5>
-                <h5><a href="{{ url_for('anotacoes_usuario') }}">Anotações</a></h5>
-                <h5><a href="{{ url_for('ver_perfil') }}">Perfil</a></h5>
+                <h5><a href="{{ url_for('dashboard_user') }}" class="{% if request.endpoint == 'dashboard_user' %}active{% endif %}">Dashboard</a></h5>
+                <h5><a href="{{ url_for('visualizar_cadastros') }}" class="{% if request.endpoint == 'visualizar_cadastros' %}active{% endif %}">Cadastros</a></h5>
+                <h5><a href="{{ url_for('anotacoes_usuario') }}" class="{% if request.endpoint == 'anotacoes_usuario' %}active{% endif %}">Anotações</a></h5>
+                <h5><a href="{{ url_for('ver_perfil') }}" class="{% if request.endpoint == 'ver_perfil' %}active{% endif %}">Perfil</a></h5>
                 <h5><a href="{{ url_for('logout') }}" style="color: white;">Sair</a></h5>
             </div>
             <div class="col-md-10 main-content">
@@ -29,7 +24,7 @@
                         <label for="placa" class="form-label">Placa do Carro</label>
                         <select class="form-control" id="placa" name="placa" required>
                             {% for carro in carros %}
-                                <option value="{{ carro.placa }}">{{ carro.placa }} - {{ carro.modelo }}</option>
+                                <option value="{{ carro['placa'] }}">{{ carro['placa'] }} - {{ carro['modelo'] }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -40,6 +35,10 @@
                     <div class="form-group mb-3">
                         <label for="descricao" class="form-label">Descrição</label>
                         <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="data_anotacao" class="form-label">Data da Anotação</label>
+                        <input type="date" class="form-control" id="data_anotacao" name="data_anotacao" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Adicionar Anotação</button>
                 </form>
@@ -62,22 +61,22 @@
                     {% for anotacao in anotacoes %}
                     <div class="row text-center">
                         <div class="col-md-3">
-                            <div class="table-row">{{ anotacao.placa }}</div>
+                            <div class="table-row">{{ anotacao['placa'] }}</div>
                         </div>
                         <div class="col-md-3">
-                            <div class="table-row">{{ anotacao.titulo }}</div>
+                            <div class="table-row">{{ anotacao['titulo'] }}</div>
                         </div>
                         <div class="col-md-3">
-                            <div class="table-row">{{ anotacao.data_anotacao }}</div>
+                            <div class="table-row">{{ anotacao['data_anotacao'] }}</div>
                         </div>
                         <div class="col-md-3">
                             <div class="table-row">
-                                {% if anotacao.descricao|length > 50 %}
-                                    <a href="#" class="descricao-link" data-bs-toggle="modal" data-bs-target="#descricaoModal" data-descricao="{{ anotacao.descricao }}">
-                                        {{ anotacao.descricao[:50] }}...
+                                {% if anotacao['descricao']|length > 50 %}
+                                    <a href="#" class="descricao-link" data-bs-toggle="modal" data-bs-target="#descricaoModal" data-descricao="{{ anotacao['descricao'] }}">
+                                        {{ anotacao['descricao'][:50] }}...
                                     </a>
                                 {% else %}
-                                    {{ anotacao.descricao }}
+                                    {{ anotacao['descricao'] }}
                                 {% endif %}
                             </div>
                         </div>
