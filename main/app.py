@@ -151,23 +151,36 @@ def cliente_dashboard():
 def edit_car():
     if 'loggedin' in session:
         car_id = request.form['id']
-        placa = request.form['placa']
         chassi = request.form['chassi']
         modelo = request.form['modelo']
         ano = request.form['ano']
+        placa = request.form['placa']
+        empresa_id = request.form['empresa_id']
+        ultima_troca_pneus = request.form['ultima_troca_pneus']
+        ultima_troca_oleo = request.form['ultima_troca_oleo']
         ultima_revisao = request.form['ultima_revisao']
+        ultima_troca_vela = request.form['ultima_troca_vela']
+        ultima_troca_caixa_cambio = request.form['ultima_troca_caixa_cambio']
+        ultima_troca_suspensao = request.form['ultima_troca_suspensao']
+        ultima_troca_bateria = request.form['ultima_troca_bateria']
+        validade_bateria = request.form['validade_bateria']
+        ultima_troca_correia_dentada = request.form['ultima_troca_correia_dentada']
         proxima_revisao = request.form['proxima_revisao']
-        peca_especifica = request.form['peca_especifica']
-        data_instalacao = request.form['data_instalacao']
-        data_manutencao = request.form['data_manutencao']
+        scanner_instalado = request.form['scanner_instalado']
 
         cursor = db.cursor()
         try:
             cursor.execute("""
                 UPDATE carros 
-                SET placa = %s, chassi = %s, modelo = %s, ano = %s, ultima_revisao = %s, proxima_revisao = %s, peca_especifica = %s, data_instalacao = %s, data_manutencao = %s
+                SET chassi = %s, modelo = %s, ano = %s, placa = %s, empresa_id = %s, 
+                    ultima_troca_pneus = %s, ultima_troca_oleo = %s, ultima_revisao = %s, 
+                    ultima_troca_vela = %s, ultima_troca_caixa_cambio = %s, ultima_troca_suspensao = %s, 
+                    ultima_troca_bateria = %s, validade_bateria = %s, ultima_troca_correia_dentada = %s, 
+                    proxima_revisao = %s, scanner_instalado = %s
                 WHERE id = %s
-            """, (placa, chassi, modelo, ano, ultima_revisao, proxima_revisao, peca_especifica, data_instalacao, data_manutencao, car_id))
+            """, (chassi, modelo, ano, placa, empresa_id, ultima_troca_pneus, ultima_troca_oleo, ultima_revisao, 
+                  ultima_troca_vela, ultima_troca_caixa_cambio, ultima_troca_suspensao, ultima_troca_bateria, 
+                  validade_bateria, ultima_troca_correia_dentada, proxima_revisao, scanner_instalado, car_id))
             db.commit()
             flash('Carro atualizado com sucesso!', 'success')
         except Exception as e:

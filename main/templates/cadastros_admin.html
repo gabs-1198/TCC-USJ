@@ -61,7 +61,15 @@
                                     <td>{{ carro.ultima_revisao }}</td>
                                     <td>{{ carro.proxima_revisao }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCarModal" data-id="{{ carro.id }}" data-placa="{{ carro.placa }}" data-chassi="{{ carro.chassi }}" data-modelo="{{ carro.modelo }}" data-ano="{{ carro.ano }}" data-ultima_revisao="{{ carro.ultima_revisao }}" data-proxima_revisao="{{ carro.proxima_revisao }}">
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCarModal"
+                                            data-id="{{ carro.id }}" data-placa="{{ carro.placa }}" data-chassi="{{ carro.chassi }}"
+                                            data-modelo="{{ carro.modelo }}" data-ano="{{ carro.ano }}" data-ultima_revisao="{{ carro.ultima_revisao }}"
+                                            data-proxima_revisao="{{ carro.proxima_revisao }}" data-ultima_troca_pneus="{{ carro.ultima_troca_pneus }}"
+                                            data-ultima_troca_oleo="{{ carro.ultima_troca_oleo }}" data-ultima_troca_vela="{{ carro.ultima_troca_vela }}"
+                                            data-ultima_troca_caixa_cambio="{{ carro.ultima_troca_caixa_cambio }}" data-ultima_troca_suspensao="{{ carro.ultima_troca_suspensao }}"
+                                            data-ultima_troca_bateria="{{ carro.ultima_troca_bateria }}" data-validade_bateria="{{ carro.validade_bateria }}"
+                                            data-ultima_troca_correia_dentada="{{ carro.ultima_troca_correia_dentada }}" data-scanner_instalado="{{ carro.scanner_instalado }}"
+                                            data-empresa_id="{{ carro.empresa_id }}">
                                             Editar
                                         </button>
                                     </td>
@@ -179,52 +187,81 @@
                 <div class="modal-body">
                     <form method="POST" action="{{ url_for('edit_car') }}">
                         <input type="hidden" name="id" id="editCarId">
-                        <div class="form-group">
-                            <label for="editPlaca" class="form-label">Placa</label>
-                            <input type="text" class="form-control" id="editPlaca" name="placa" required>
-                        </div>
-
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="editChassi" class="form-label">Chassi</label>
                             <input type="text" class="form-control" id="editChassi" name="chassi" required>
                         </div>
-
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="editModelo" class="form-label">Modelo</label>
                             <input type="text" class="form-control" id="editModelo" name="modelo" required>
                         </div>
-
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="editAno" class="form-label">Ano</label>
                             <input type="text" class="form-control" id="editAno" name="ano" required>
                         </div>
-
-                        <div class="form-group">
+                        <div class="mb-3">
+                            <label for="editPlaca" class="form-label">Placa</label>
+                            <input type="text" class="form-control" id="editPlaca" name="placa" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEmpresaId" class="form-label">Empresa</label>
+                            <select class="form-control" id="editEmpresaId" name="empresa_id" required>
+                                {% for empresa in empresas %}
+                                    <option value="{{ empresa.id }}">{{ empresa.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUltimaTrocaPneus" class="form-label">Última Troca de Pneus</label>
+                            <input type="date" class="form-control" id="editUltimaTrocaPneus" name="ultima_troca_pneus" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUltimaTrocaOleo" class="form-label">Última Troca de Óleo</label>
+                            <input type="date" class="form-control" id="editUltimaTrocaOleo" name="ultima_troca_oleo" required>
+                        </div>
+                        <div class="mb-3">
                             <label for="editUltimaRevisao" class="form-label">Última Revisão</label>
                             <input type="date" class="form-control" id="editUltimaRevisao" name="ultima_revisao" required>
                         </div>
-
-                        <div class="form-group">
+                        <div class="mb-3">
+                            <label for="editUltimaTrocaVela" class="form-label">Última Troca de Vela de Ignição</label>
+                            <input type="date" class="form-control" id="editUltimaTrocaVela" name="ultima_troca_vela" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUltimaTrocaCaixaCambio" class="form-label">Última Troca de Caixa de Câmbio</label>
+                            <input type="date" class="form-control" id="editUltimaTrocaCaixaCambio" name="ultima_troca_caixa_cambio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUltimaTrocaSuspensao" class="form-label">Última Troca de Suspensão</label>
+                            <input type="date" class="form-control" id="editUltimaTrocaSuspensao" name="ultima_troca_suspensao" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUltimaTrocaBateria" class="form-label">Última Troca de Bateria</label>
+                            <input type="date" class="form-control" id="editUltimaTrocaBateria" name="ultima_troca_bateria" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editValidadeBateria" class="form-label">Validade da Bateria Atual</label>
+                            <input type="date" class="form-control" id="editValidadeBateria" name="validade_bateria" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUltimaTrocaCorreiaDentada" class="form-label">Última Troca de Correia Dentada</label>
+                            <input type="date" class="form-control" id="editUltimaTrocaCorreiaDentada" name="ultima_troca_correia_dentada" required>
+                        </div>
+                        <div class="mb-3">
                             <label for="editProximaRevisao" class="form-label">Previsão de Revisão</label>
                             <input type="date" class="form-control" id="editProximaRevisao" name="proxima_revisao" required>
                         </div>
-
-                        <div class="form-group">
-                            <label for="pecaEspecifica" class="form-label">Peça Específica</label>
-                            <input type="text" class="form-control" id="pecaEspecifica" name="peca_especifica" placeholder="Nome da Peça">
+                        <div class="mb-3">
+                            <label for="editScannerInstalado" class="form-label">Scanner Instalado</label>
+                            <select class="form-control" id="editScannerInstalado" name="scanner_instalado" required>
+                                <option value="1">Sim</option>
+                                <option value="0">Não</option>
+                            </select>
                         </div>
-
-                        <div class="form-group">
-                            <label for="dataInstalacao" class="form-label">Data de Instalação</label>
-                            <input type="date" class="form-control" id="dataInstalacao" name="data_instalacao">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-primary">Salvar</button>
                         </div>
-
-                        <div class="form-group">
-                            <label for="dataManutencao" class="form-label">Data de Manutenção</label>
-                            <input type="date" class="form-control" id="dataManutencao" name="data_manutencao">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary mt-3">Salvar</button>
                     </form>
                 </div>
             </div>

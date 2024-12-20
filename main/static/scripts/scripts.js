@@ -21,7 +21,7 @@ function adjustFontColor(element) {
 }
 
 let myChart = null;
-
+// Gráfico de linha
 window.onload = function() {
     // Ensure Chart.js is loaded
     if (typeof Chart === 'undefined') {
@@ -115,32 +115,64 @@ window.onload = function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const editCarModal = document.getElementById('editCarModal');
-    editCarModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const id = button.getAttribute('data-id');
-        const placa = button.getAttribute('data-placa');
-        const chassi = button.getAttribute('data-chassi');
-        const modelo = button.getAttribute('data-modelo');
-        const ano = button.getAttribute('data-ano');
-        const ultimaRevisao = button.getAttribute('data-ultima_revisao');
-        const proximaRevisao = button.getAttribute('data-proxima_revisao');
+    if (editCarModal) {
+        editCarModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const placa = button.getAttribute('data-placa');
+            const chassi = button.getAttribute('data-chassi');
+            const modelo = button.getAttribute('data-modelo');
+            const ano = button.getAttribute('data-ano');
+            const ultimaRevisao = button.getAttribute('data-ultima_revisao');
+            const proximaRevisao = button.getAttribute('data-proxima_revisao');
+            const ultimaTrocaPneus = button.getAttribute('data-ultima_troca_pneus');
+            const ultimaTrocaOleo = button.getAttribute('data-ultima_troca_oleo');
+            const ultimaTrocaVela = button.getAttribute('data-ultima_troca_vela');
+            const ultimaTrocaCaixaCambio = button.getAttribute('data-ultima_troca_caixa_cambio');
+            const ultimaTrocaSuspensao = button.getAttribute('data-ultima_troca_suspensao');
+            const ultimaTrocaBateria = button.getAttribute('data-ultima_troca_bateria');
+            const validadeBateria = button.getAttribute('data-validade_bateria');
+            const ultimaTrocaCorreiaDentada = button.getAttribute('data-ultima_troca_correia_dentada');
+            const scannerInstalado = button.getAttribute('data-scanner_instalado');
+            const empresaId = button.getAttribute('data-empresa_id');
 
-        const editCarId = document.getElementById('editCarId');
-        const editPlaca = document.getElementById('editPlaca');
-        const editChassi = document.getElementById('editChassi');
-        const editModelo = document.getElementById('editModelo');
-        const editAno = document.getElementById('editAno');
-        const editUltimaRevisao = document.getElementById('editUltimaRevisao');
-        const editProximaRevisao = document.getElementById('editProximaRevisao');
+            const editCarId = document.getElementById('editCarId');
+            const editPlaca = document.getElementById('editPlaca');
+            const editChassi = document.getElementById('editChassi');
+            const editModelo = document.getElementById('editModelo');
+            const editAno = document.getElementById('editAno');
+            const editUltimaRevisao = document.getElementById('editUltimaRevisao');
+            const editProximaRevisao = document.getElementById('editProximaRevisao');
+            const editUltimaTrocaPneus = document.getElementById('editUltimaTrocaPneus');
+            const editUltimaTrocaOleo = document.getElementById('editUltimaTrocaOleo');
+            const editUltimaTrocaVela = document.getElementById('editUltimaTrocaVela');
+            const editUltimaTrocaCaixaCambio = document.getElementById('editUltimaTrocaCaixaCambio');
+            const editUltimaTrocaSuspensao = document.getElementById('editUltimaTrocaSuspensao');
+            const editUltimaTrocaBateria = document.getElementById('editUltimaTrocaBateria');
+            const editValidadeBateria = document.getElementById('editValidadeBateria');
+            const editUltimaTrocaCorreiaDentada = document.getElementById('editUltimaTrocaCorreiaDentada');
+            const editScannerInstalado = document.getElementById('editScannerInstalado');
+            const editEmpresaId = document.getElementById('editEmpresaId');
 
-        editCarId.value = id;
-        editPlaca.value = placa;
-        editChassi.value = chassi;
-        editModelo.value = modelo;
-        editAno.value = ano;
-        editUltimaRevisao.value = ultimaRevisao;
-        editProximaRevisao.value = proximaRevisao;
-    });
+            editCarId.value = id;
+            editPlaca.value = placa;
+            editChassi.value = chassi;
+            editModelo.value = modelo;
+            editAno.value = ano;
+            editUltimaRevisao.value = ultimaRevisao;
+            editProximaRevisao.value = proximaRevisao;
+            editUltimaTrocaPneus.value = ultimaTrocaPneus;
+            editUltimaTrocaOleo.value = ultimaTrocaOleo;
+            editUltimaTrocaVela.value = ultimaTrocaVela;
+            editUltimaTrocaCaixaCambio.value = ultimaTrocaCaixaCambio;
+            editUltimaTrocaSuspensao.value = ultimaTrocaSuspensao;
+            editUltimaTrocaBateria.value = ultimaTrocaBateria;
+            editValidadeBateria.value = validadeBateria;
+            editUltimaTrocaCorreiaDentada.value = ultimaTrocaCorreiaDentada;
+            editScannerInstalado.value = scannerInstalado;
+            editEmpresaId.value = empresaId;
+        });
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
